@@ -1,0 +1,756 @@
+/* -----------------------------------------------------------------
+[Customise Stylesheet]
+
+Project:	    Qanda
+Author:         Travis <travis@travaganza.com.au>
+Since:	        1.0.0
+Last Modified:	2010-02-21
+
+[TABLE OF CONTENTS]
+1. CSS Reset
+2. Generic Elements
+3. Wrapper
+4. Header
+    4.1 Logo
+5. Navigation
+    5.1 Menu
+    5.2 Search Engine
+6. Content
+    6.1 Main Bar
+    6.2 Side Bar
+    6.3 Content Footer
+7. Footer
+8. Questions
+    8.1 Question Summary
+    8.2 Question/Answer Detail
+9. Answers
+10. Users
+    10.1 Login Form
+11. Tags
+12. Badges
+13. Partials
+    13.1 Tag List
+    13.2 Post Form
+    13.3 Pagination
+14. Widgets
+    14.1 Login Form
+15. CSS Tools
+    15.1 Clear Fix
+    15.2 Image Replacement
+    
+----------------------------------------------------------------- */
+
+
+
+/* -------------------------------------------------------------- */
+/* 1. CSS Reset
+/*  REF: http://developer.yahoo.com/yui/reset/
+/* -------------------------------------------------------------- */
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {   margin:0;  padding:0;  }
+table { border-collapse:collapse; border-spacing:0; 	}
+fieldset,img {  border:0; 	}
+address,caption,cite,code,dfn,em,strong,th,var {   font-style:normal;   font-weight:normal; 	}
+ol,ul { 	    list-style:none; 	}
+caption,th { 	text-align:left; 	}
+h1,h2,h3,h4,h5,h6 {   font-size:100%;   font-weight:normal; 	}
+q:before,q:after { content:''; }
+abbr,acronym { border:0; }
+
+
+
+/* -------------------------------------------------------------- */
+/* 2. Generic Elements
+/* -------------------------------------------------------------- */
+
+body {
+    color: #333;
+    /*font-family: Tahoma, Helvetica, sans-serif;*/
+    font-family: helvetica, arial;
+    font-size: 14px;
+}
+
+h1 { font-size: 32px; }
+h2 { font-size: 28px; }
+h3 { font-size: 22px; }
+h4 { font-size: 16px; }
+
+a {
+    color: #AE1B13;
+}
+
+a:link, a:visited {
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 3. Wrapper
+/* -------------------------------------------------------------- */
+
+#wrapper {
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 4. Header
+/* -------------------------------------------------------------- */
+
+#header {
+    background: #00415C url(../images/header-background.gif) repeat-x 0 0;
+    padding: 20px 0 0 0;
+}
+
+#header-inner {
+    width: 940px;
+    margin: 0 auto;
+    padding: 0 0 20px 0;
+}
+
+    /* -------------------------------------------------------------- */
+    /* 4.1 Logo                                                       */
+    
+    #header .logo h1 a {
+        color: #FFF;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 5. Navigation
+/* -------------------------------------------------------------- */
+
+#navigation {
+    background-color: #E8EBEC;
+    border-bottom: 1px solid #BAC2C6;
+}
+
+#navigation-inner {
+    width: 940px;
+    margin: 0 auto;
+}
+
+    /* -------------------------------------------------------------- */
+    /* 5.1 Menu                                                       */
+
+    #navigation ul {
+        float: left;
+    }
+
+    #navigation ul li {
+        float: left;
+        font-family: verdana;
+    }
+
+    #navigation ul li a {
+        display: block;
+        padding: 7px 15px 7px 16px;
+        border-left: 1px solid #BAC2C6;
+    }
+
+    #navigation ul li.last a {
+        border-right: 1px solid #BAC2C6;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 5.2 Search Engine                                              */
+
+    #navigation .search-engine {
+        float: right;
+        margin: 5px 0 0 0;
+    }
+
+    #navigation .search-engine form label {
+        display: none;
+    }
+
+    #navigation .search-engine form #search {
+        border: 1px solid #AAAAAA;
+        padding: 2px;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 6. Content
+/* -------------------------------------------------------------- */
+
+#content {
+    width: 940px;
+    margin: 0 auto;
+    padding: 20px 0 20px 0;
+}
+
+    /* -------------------------------------------------------------- */
+    /* 6.1 Main Bar                                                   */
+
+    #content .main-bar {
+        width: 710px;
+        float: left;
+    }
+
+    #content .main-bar.no-sidebar {
+        width: auto;
+        float: none;
+    }
+
+    #content .main-bar .subheader {
+        border-bottom: 1px solid #333;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 6.2 Side Bar                                                   */
+
+    #content .side-bar {
+        width: 220px;
+        float: right;
+        margin: 0 0 0 5px;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 6.3 Content Footer                                             */
+
+    #content .content-footer {
+        background-color: #ddd;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 7. Footer
+/* -------------------------------------------------------------- */
+
+#footer{
+    background-color: #EEEEEE;
+    color: #777777;
+    border-top: 2px solid #ACAEAF;
+    padding: 20px 0;
+}
+
+#footer-inner{
+    width: 940px;
+    margin: 0 auto;
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 8. Questions
+/* -------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------- */
+    /* 8.1 Question Summary                                           */
+
+    .question-summary {
+        border-bottom: 1px dotted #ACAEAF;
+        margin: 10px 0 0 0;
+        padding: 0 0 10px 0;
+    }
+
+    .question-summary .votes,
+    .question-summary .answers,
+    .question-summary .views {
+        text-align: center;
+        width: 50px;
+        height: 50px;
+        float: left;
+        margin: 0 5px 0 0;
+    }
+
+    .question-summary .votes .count,
+    .question-summary .answers .count,
+    .question-summary .views .count {
+        font-size: 22px;
+        font-weight: bold;
+        display: block;
+    }
+
+    .question-summary .votes .label,
+    .question-summary .answers .label,
+    .question-summary .views .label {
+        font-size: 12px;
+        display: block;
+    }
+
+    .question-summary .votes {
+        background-color: #E8EBEC;
+    }
+
+    .question-summary .answers {
+        background-color: #B5C8CF;
+    }
+
+    .question-summary .views {
+        background-color: #83AEBF;
+    }
+
+    .question-summary .summary {
+        width: 465px;
+        float: left;
+    }
+
+    .question-summary .summary h3 {
+        margin: 0 0 3px 0;
+    }
+
+    .question-summary .summary .meta {
+        float: right;
+    }
+
+
+
+    /* -------------------------------------------------------------- */
+    /* 8.2 Question/Answer Detail                                     */
+
+    .post-detail {
+        margin: 15px 0 0 0;
+    }
+    
+    .post-detail .panel {
+        width: 50px;
+        float: left;
+        text-align: center;
+    }
+
+    .post-detail .panel .score {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .post-detail .detail {
+        width: 640px;
+        float: left;
+        margin: 0 0 0 10px;
+    }
+
+    .post-detail ul.tags {
+        margin: 10px 0 0 0;
+    }
+
+    .post-detail .meta {
+        width: 400px;
+        float: left;
+        margin: 15px 0 0 0;
+    }
+
+    .post-detail .user-summary {
+        float: right;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 9. Answers
+/* -------------------------------------------------------------- */
+
+.answers-list {
+    margin: 20px 0 20px 0;
+}
+
+.answers-list .answer {
+    border-bottom: 1px dotted #ACAEAF;
+    padding: 0 0 10px 0;
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 10. Users
+/* -------------------------------------------------------------- */
+
+.user-summary {
+    width: 145px;
+    height: 35px;
+    border: 1px solid #BAC2C6;
+    margin: 10px 10px 0 0;
+    padding: 5px;
+    float: left;
+    background-color: #EFEFEF;
+}
+
+.user-summary .avatar {
+    float: left;
+}
+
+.user-summary .user-details {
+    float: left;
+    margin: 0 0 0 3px;
+}
+
+    /* -------------------------------------------------------------- */
+    /* 10.1 Registeration Form                                        */
+
+    form.register_form {
+        margin: 20px 0 0 0;
+    }
+
+    form.register_form label.username {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.register_form input#username {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 78px;
+        padding: 3px 5px;
+    }
+
+    form.register_form label.email {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.register_form input#email {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 114px;
+        padding: 3px 5px;
+    }
+
+    form.register_form label.password {
+        font-weight: bold;
+        font-size: 16px;
+        width: 50px;
+    }
+
+    form.register_form input#password {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 80px;
+        padding: 3px 5px;
+    }
+
+    form.register_form input#password_confirm {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 22px;
+        padding: 3px 5px;
+    }
+
+    form.register_form input#submit_register {
+        border: 1px solid #BAC2C6;
+        padding: 5px;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 10.1 Login Form                                                */
+
+    .main-bar form.login_form {
+        margin: 20px 0 0 0;
+    }
+
+    .main-bar form.login_form label.username {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .main-bar form.login_form input#username {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 20px;
+        padding: 3px 5px;
+    }
+
+    .main-bar form.login_form label.password {
+        font-weight: bold;
+        font-size: 16px;
+        width: 50px;
+    }
+
+    .main-bar form.login_form input#password {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 22px;
+        padding: 3px 5px;
+    }
+
+    .main-bar form.login_form input#submit_login {
+        border: 1px solid #BAC2C6;
+        padding: 5px;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 10.2 User Details                                              */
+
+        /* -------------------------------------------------------------- */
+        /* 10.2.1 vCard                                                   */
+
+        .vcard {
+            margin: 15px 0 0 0;
+        }
+
+        .vcard .meta {
+            float: left;
+            margin: 0 5px 0 0;
+            width: 150px;
+            text-align: center;
+        }
+
+        .vcard .meta .reputation {
+            margin: 10px 0 0 0;
+        }
+
+        .vcard .meta .reputation .value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .vcard .meta .view-count {
+            margin: 15px 0 0 0;
+        }
+
+        .vcard .summary {
+            float: left;
+            margin: 0 5px 0 0;
+            width: 380px;
+        }
+
+        .vcard .summary div .label {
+            width: 150px;
+            float: left;
+            margin: 5px 0;
+        }
+
+        .vcard .summary div .value {
+            width: 220px;
+            float: left;
+            margin: 5px 0;
+        }
+
+        .vcard .description {
+            float: left;
+            width: 360px;
+            height: 200px;
+            overflow: auto;
+            background-color: #EEE;
+            padding: 10px;
+        }
+
+    
+/* -------------------------------------------------------------- */
+/* 11. Tags
+/* -------------------------------------------------------------- */
+
+.tag-summary {
+    width: 145px;
+    margin: 10px 10px 0 0;
+    float: left;
+}
+
+.tag a{
+    border: 1px solid #BAC2C6;
+    padding: 3px 4px;
+    text-decoration: none;
+    background-color: #EFEFEF;
+}
+
+.tag a:hover,
+.tag a:active {
+    background-color: #E0EBEF;
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 12. Badges
+/* -------------------------------------------------------------- */
+
+.badge-summary {
+    margin: 15px 0;
+}
+
+.badge-summary .item {
+    float: left;
+    width: 200px;
+}
+
+.badge-summary .item a.badge {
+    border: 1px solid #BAC2C6;
+    padding: 3px 4px;
+    text-decoration: none;
+    background-color: #EFEFEF;
+}
+
+.badge-summary .item a.badge:hover,
+.badge-summary .item a.badge:active {
+    background-color: #E0EBEF;
+}
+
+.badge-summary .badge-description {
+    float: left;
+    border: 1px solid green;
+}
+
+
+
+/* -------------------------------------------------------------- */
+/* 13. Partials
+/* -------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------- */
+    /* 13.1 Tag List                                                  */
+
+    ul.tags {
+        float: left;
+    }
+
+    ul.tags li {
+        float: left;
+        margin: 5px 5px 0 0;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 13.2 Post Form                                                 */
+
+    form.post_form {
+        margin: 20px 0 0 0;
+    }
+
+    form.post_form label.post_title {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.post_form input#post_title {
+        border: 1px solid #BAC2C6;
+        width: 538px;
+        margin: 0 0 20px 20px;
+        padding: 3px 5px;
+    }
+
+    form.post_form label.post_body {
+        display: none;
+    }
+
+    form.post_form textarea#post_body {
+        border: 1px solid #BAC2C6;
+        width: 600px;
+        height: 200px;
+        margin: 0 0 20px 0;
+        padding: 5px;
+    }
+
+    form.post_form label.post_tags {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.post_form input#post_tags {
+        border: 1px solid #BAC2C6;
+        width: 400px;
+        margin: 0 0 20px 20px;
+        padding: 3px 5px;
+    }
+
+    form.post_form input#submit_post {
+        border: 1px solid #BAC2C6;
+        padding: 5px;
+    }
+
+    form.post_form label.display_name {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.post_form input#display_name {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 20px;
+        padding: 3px 5px;
+    }
+
+    form.post_form label.email {
+        font-weight: bold;
+        font-size: 16px;
+        width: 50px;
+    }
+
+    form.post_form input#email {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 22px;
+        padding: 3px 5px;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 13.3 Pagination                                                */
+
+    .pagination {
+        /*border: 1px solid red;*/
+    }
+
+    .pagination span {
+        /*border: 1px solid blue;*/
+        padding: 5px;
+        margin: 0 2px;
+    }
+
+
+
+
+
+/* -------------------------------------------------------------- */
+/* 14. Widgets
+/* -------------------------------------------------------------- */
+
+    .widget {
+        border: 1px solid #ACAEAF;
+        padding: 15px 10px 10px 15px;
+        margin: 0 0 15px 0;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 14.1 Login Form                                                */
+
+    #login-widget form input {
+        margin: 5px 0;
+        padding: 2px;
+        border: 1px solid #ACAEAF;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 14.2 User Detail                                               */
+
+    #user-widget ul li {
+        margin: 3px 0;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 15. CSS Tools
+/* -------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------- */
+    /* 15.1 Clear Fix                                                 */
+
+    .clearfix:after {
+        content: "."; 
+        display: block; 
+        height: 0; 
+        clear: both; 
+        visibility: hidden;
+    }
+    .clearfix {display: inline-block;}
+    /* Hides from IE-mac \*/
+    * html .clearfix {height: 1%;}
+    .clearfix {display: block;}
+    /* End hide from IE-mac */
+
+    /* -------------------------------------------------------------- */
+    /* 15.2 Image Replacement                                         */
+
+    .ir {
+        display:block;
+        overflow:hidden;
+        text-decoration:none;
+        text-indent:-90000em;
+    }
+
