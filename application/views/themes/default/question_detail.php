@@ -33,11 +33,19 @@
                             <br/>
                             <?php echo $question->favorite_count; ?>
                         </div>
+                        <div class="view">
+                            <span>View</span>
+                            <br/>
+                            <?php echo $question->view_count; ?>
+                        </div>
                     </div><?php /* END .panel */ ?>
 
                     <div class="detail">
                         <div class="content">
-                            <?php echo $question->content; ?>
+                            <?php
+                                //echo text::auto_p($question->content);
+                                echo nl2br($question->content);
+                            ?>
                         </div>
                         
                         <ul class="tags clearfix">
@@ -51,11 +59,12 @@
                         <div class="user-summary clearfix">
                             <div class="avatar">
                                 <a href="<?php echo url::site('users/detail/'.$question->user->id); ?>">
+                                    <?php /* TODO: Use real gravatar API */ ?>
                                     <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=32&d=identicon&r=PG'); ?>" width="32" height="32" alt="" />
                                 </a>
                             </div>
                             <div class="user-details">
-                                <a href="<?php echo url::site('users/detail/'.$question->user->id); ?>">
+                                <a href="<?php echo url::site('users/detail/'.$question->user->username); ?>">
                                     <?php echo $question->user->username; ?>
                                 </a>
                                 <br/>
@@ -63,6 +72,7 @@
                             </div>
                         </div>
 
+                        <?php /***travo20100227: Not Implemented
                         <div class="meta">
                             <span><?php echo html::anchor('#', 'mod'); ?></span>
                             | <span><?php echo html::anchor('#', 'edit'); ?></span>
@@ -70,6 +80,7 @@
                             | <span><?php echo html::anchor('#', 'delete'); ?></span>
                             | <span><?php echo html::anchor('#', 'flag'); ?></span>
                         </div>
+                        */ ?>
 
                     </div><?php /* END .detail */ ?>
 
@@ -97,30 +108,21 @@
                                 <div class="down-vote">
                                     <?php echo html::anchor('#', 'Down'); ?>
                                 </div>
-                                <div class="favorite">
-                                    <?php echo html::anchor('#', 'Fav'); ?>
-                                    <br/>
-                                    <?php echo $answer->favorite_count; ?>
-                                </div>
                             </div><?php /* END .panel */ ?>
 
 
                             <div class="detail">
                                 <div class="content">
-                                    <?php echo $answer->content; ?>
+                                    <?php
+                                        //echo text::auto_p($answer->content);
+                                        echo nl2br($answer->content);
+                                    ?>
                                 </div>
-
-                                <ul class="tags clearfix">
-                                    <?php foreach($answer->tags as $index => $tag): ?>
-                                        <li class="tag">
-                                            <?php echo html::anchor('questions/tagged/'.$tag->slug, $tag->name, array('rel'=>'tag')); ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
 
                                 <div class="user-summary clearfix">
                                     <div class="avatar">
-                                        <a href="<?php echo url::site('users/detail/'.$answer->user->id); ?>">
+                                        <a href="<?php echo url::site('users/detail/'.$answer->user->username); ?>">
+                                            <?php /* TODO: Use real gravatar API */ ?>
                                             <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=32&d=identicon&r=PG'); ?>" width="32" height="32" alt="" />
                                         </a>
                                     </div>
@@ -133,6 +135,7 @@
                                     </div>
                                 </div>
 
+                                <?php /***travo20100227: Not Implemented
                                 <div class="meta">
                                     <span><?php echo html::anchor('#', 'mod'); ?></span>
                                     | <span><?php echo html::anchor('#', 'edit'); ?></span>
@@ -140,7 +143,8 @@
                                     | <span><?php echo html::anchor('#', 'delete'); ?></span>
                                     | <span><?php echo html::anchor('#', 'flag'); ?></span>
                                 </div>
-
+                                */ ?>
+                                
                             </div><?php /* END .detail */ ?>
 
                             <?php /* TODO: Question Comments */ ?>
@@ -148,14 +152,31 @@
                         </div><?php /* END .post-detail */ ?>
 
                     <?php endforeach; ?>
+
+                    <?php if(count($answers) == 0): ?>
+                        <div class="no-answers">
+                            <p>
+                                There's no answer to this question. Provide us your answer.
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+
                 </div><?php /* END .answers-list */ ?>
+
+
+                
+                <?php /* TODO: Display a message when there's no answers to this question */ ?>
+
 
                 
                 <h2>Answer this Question</h2>
                 <?php
                     $form                       = View::factory($theme_url.'partials/post_form');
+                    $form->submit_uri           = 'answers/create';
                     $form->form_class           = 'answer-question';
                     $form->form_method          = 'post';
+                    $form->question_id          = $question->id;
                     $form->enable_post_title    = FALSE;
                     $form->enable_post_tags     = FALSE;
                     $form->submit_label         = 'Post Answer';

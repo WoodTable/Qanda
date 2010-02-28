@@ -26,18 +26,9 @@ class Users_Controller extends Website_Controller
     }
 
     /**
-     * Default Landing Action
-     */
-    public function index()
-    {
-        //-- Reroute
-        $this->show();
-    }
-
-    /**
      * Show a List of Users
      */
-    public function show()
+    public function browse()
     {
         //TODO: Cater pagination
         //-- Model
@@ -72,33 +63,28 @@ class Users_Controller extends Website_Controller
             $this->template->content = "You have already logged in.";
         }
         elseif($_POST)
-        {//-- Submitting login form
+        {//-- Detect a Post Back
             $post = Validation::factory($_POST);
 
-            //TODO: Sanitise user input
-            $username = $post->username;
-            $password = $post->password;
+            try
+            {//-- Attemp to Login
+                ORM::factory('user')->authenticate($post);
 
-            $user = ORM::factory('user', $username);
-            $this->auth = Auth::factory();
-
-            if (!$user->loaded)
-            {//-- No matching Username
-                //TODO: Display 'Login Unsuccessful' Error Page
-                $post->add_error('username', 'not_found');
-                $this->template->content = "username not found";
-            }
-            elseif ($this->auth->login($user, $password))
-            {
                 //-- Login Success, Redirect
-                //TODO: Provide Dynamic Redirect Location
-                url::redirect('/');
+                if(isset($post->redirect_url))
+                {
+                    url::redirect($post->redirect_url);
+                }
+                else
+                {
+                    url::redirect('/');
+                }
             }
-            else
-            {//-- Incorrect Password
-                //TODO: Display 'Login Unsuccessful' Error Page
-                $post->add_error('password', 'incorrect_password');
-                $this->template->content = "password don't match";
+            catch(Exception $ex)
+            {//-- Throw an Error Message
+                //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
+                $message = 'Cannot login. Caught exception: '.$ex->getMessage();
+                throw new Kohana_User_Exception('Fail to Login.', $message);
             }
         }
         else
@@ -117,8 +103,15 @@ class Users_Controller extends Website_Controller
         Auth::instance()->logout();
 
         //-- Redirect
-        //TODO: Provide Dynamic Redirect Location
-        url::redirect('/');
+        $get = Validation::factory($_GET);
+        if(isset($get->redirect_url))
+        {
+            url::redirect($get->redirect_url);
+        }
+        else
+        {
+            url::redirect('/');
+        }
     }
 
     /**
@@ -130,52 +123,41 @@ class Users_Controller extends Website_Controller
     }
 
     /**
-     * Register a new User
+     * Register as a new User
      */
     public function register()
     {
+        //-- Verify Currnet Authentication
         if(Auth::instance()->logged_in())
-        {//-- If already an existing login session, display error
-            //TODO: Display 'Already Logged In' Error Page
+        {//-- Display 'Already Logged In' message
+            //TODO: Display proper 'Already Logged In' page and provide link to log out
             $this->template->content = "You have already logged in.";
         }
         elseif($_POST)
-        {//-- Submitting register form
-
+        {//-- Detects a Post Back
             $post = Validation::factory($_POST);
 
-            //TODO: Sanitise user input
-            $username = $post->username;
-            $email = $post->email;
-            $password = $post->password;
-            $password_confirm = $post->password_confirm;
-            $role_name = 'login';
-
-            if($password != $password_confirm)
+            //-- Create new User
+            try
             {
-                //TODO: Display 'Passwords Not Match' Error Page
-            }
+                $user_id    = ORM::factory('user')->create($post);
+                $user       = ORM::factory('user', $user_id);
 
-            //TODO: Check if username already exists (filter deleted records)
-            //TODO: Check if email already exists (filter deleted records)
-
-            //-- Create new user
-            $user = ORM::factory('user');
-            $user->username = $username;
-            $user->email = $email;
-            $user->password = $password;
-
-            if($user->add(ORM::factory('role', $role_name)) AND $user->save())
-            {
                 //-- Login using the collected data
-                Auth::instance()->login($username, $password);
+                Auth::instance()->login($user->username, $post->password);
+
                 //-- Redirect
-                //TODO: Set Dynamic Redirect Location
-                url::redirect('users');
+                url::redirect('/users/detail/'.$user->username);
+            }
+            catch(Exception $ex)
+            {//-- Throw an Error Message
+                //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
+                $message = 'Cannot create user. Caught exception: '.$ex->getMessage();
+                throw new Kohana_User_Exception('Fail to Create User.', $message);
             }
         }
         else
-        {//-- Show Register Form
+        {//-- Display User Registration Form
             //-- Render View
             $this->template->content = View::factory('themes/default/user_register');
         }

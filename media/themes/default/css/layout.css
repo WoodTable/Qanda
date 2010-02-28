@@ -4,7 +4,7 @@
 Project:	    Qanda
 Author:         Travis <travis@travaganza.com.au>
 Since:	        1.0.0
-Last Modified:	2010-02-21
+Last Modified:	2010-02-27
 
 [TABLE OF CONTENTS]
 1. CSS Reset
@@ -291,7 +291,7 @@ a:hover, a:active {
     }
 
     .question-summary .summary {
-        width: 465px;
+        width: 540px; /*465px*/
         float: left;
     }
 

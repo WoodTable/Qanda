@@ -26,7 +26,7 @@
             <ul class="clearfix">
                 <li><?php echo html::anchor('/', 'Questions'); ?></li>
                 <li><?php echo html::anchor('/tags', 'Tags'); ?></li>
-                <li><?php echo html::anchor('/users', 'Users'); ?></li>
+                <li><?php echo html::anchor('/users/browse', 'Users'); ?></li>
                 <li><?php echo html::anchor('/badges', 'Badges'); ?></li>
                 <li><?php echo html::anchor('/questions/unanswered', 'Unanswered'); ?></li>
                 <li class="last"><?php echo html::anchor('/questions/ask', 'Ask Question'); ?></li>

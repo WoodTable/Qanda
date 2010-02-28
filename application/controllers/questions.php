@@ -23,42 +23,35 @@ class Questions_Controller extends Website_Controller
     public function __construct()
     {
         parent::__construct(); //-- This must be included
-
-        //$this->db = Database::instance();
-        //$this->session = Session::instance();
     }
-    
-    /**
-     * Default Landing Action
-     */
-    /***travo20100131: Deprecate landing page as it should be managed through route
-    public function index()
-    {
-        //-- Reroute to 'show' action
-        return $this->show();
-    }
-    */
 
     /**
-     * Show a List of Questions
+     * Browse a List of Questions
+     *
+     * @param int $page_number
+     * @param int $page_size
+     * @param string $order_by
      */
-    public function show($page_number=1, $page_size=5, $order_by='active')
+    public function browse($page_number=1, $page_size=5, $order_by='active')
     {
+        //TODO: Make use of $order_by argument
+
+        
         //-- Model
-        $questions = ORM::factory('post');
+        $post_model = ORM::factory('post');
 
         //-- Pagination
         $this->pagination = Pagination::factory();
         $this->pagination->initialize(array(
-            'base_url' => 'questions/'
-            , 'uri_segment'       => 'page'
-            , 'total_items'     => $questions->get_questions_count()
+            'base_url' => 'questions/browse'
+            //, 'uri_segment'     => 'page'
+            , 'total_items'     => $post_model->get_all_questions_count()
             , 'items_per_page'  => $page_size
         ));
         
         //-- Render View
         $this->template->content = View::factory('themes/default/question_list')
-            ->bind('questions', $questions->get_questions($page_number, $page_size, $order_by));
+            ->bind('questions', $post_model->get_active_questions($page_number, $page_size));
     }
 
     /**
@@ -69,32 +62,23 @@ class Questions_Controller extends Website_Controller
      */
     public function detail($question_id, $slug='')
     {
-        if($_POST)
-        {//-- An Answer is Submitted
-            $post = Validation::factory($_POST);
-            $success = ORM::factory('post')->add_answer($question_id, $post);
+        //-- Fetch the Question
+        $question = ORM::factory('post', $question_id);
+        
+        //-- Increase View Count
+        //--NOTE: Currently using linear incremental on view count, which means every refresh will increase this count
+        $question->view_count += 1;
+        $question->save();
 
-            if($success)
-            {
-                //-- TODO: Fetch Question & Increase Answer Count
-                $question = ORM::factory('post', $question_id);
-
-                //-- Redirect
-                //-- NOTE: You will require to redirect, otherwise submission will be trigger again upon page refresh
-                url::redirect('/questions/detail/'.$question_id.'/'.$question->slug);
-            }
-            else
-            {
-                //TODO: Display Answer Submission Failed Message
-            }
-            return; //-- Code Suppose to End Regardless
+        //-- Track User View Activity
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $user = $authentic->get_user();
+            ORM::factory('activity')->track($user->id, 'view', 'post', $question_id);
         }
 
-        
-        //-- Model
-        $question = ORM::factory('post')->where('id', $question_id)
-            ->find();
-        
+        //-- Fetch its Answers
         $answers = ORM::factory('post')->where('post_parent_id', $question_id)
             ->where('status', 'publish')
             ->where('post_type', 'answer')
@@ -120,21 +104,26 @@ class Questions_Controller extends Website_Controller
      */
     public function ask()
     {
+        //-- Detect a Post Back
         if($_POST)
         {
             $post = Validation::factory($_POST);
-            $question_id = ORM::factory('post')->add_question($post);
             
-            if($question_id > 0)
-            {//-- Redirect
-                //-- NOTE: You will require to redirect, otherwise submission will be trigger again upon page refresh
-                $question = ORM::factory('post', $question_id);
+            try
+            {//-- Instantiate New Question Model
+                $question_id    = ORM::factory('post')->create_question($post);
+                $question       = ORM::factory('post', $question_id);
+
+                //-- Redirect
                 url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
             }
-            else
-            {
-                //TODO: Display Question Submission Failed Message
+            catch(Exception $ex)
+            {//-- Throw an Error Message
+                //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
+                $message = 'Cannot create question. Caught exception: '.$ex->getMessage();
+                throw new Kohana_User_Exception('Fail to Create Question.', $message);
             }
+
             return; //-- Code Suppose to End Regardless
         }
 
@@ -145,23 +134,23 @@ class Questions_Controller extends Website_Controller
     /**
      * View List of Unanswered Questions
      */
-    public function unanswered($page_number=1, $page_size=5, $order_by='newest')
+    public function unanswered($page_number=1, $page_size=5)
     {
         //-- Model
-        $questions = ORM::factory('post');
+        $post_model = ORM::factory('post');
 
         //-- Pagination
         $this->pagination = Pagination::factory();
         $this->pagination->initialize(array(
             'base_url'          => 'questions/unanswered/'
-            , 'uri_segment'     => 'page'
-            , 'total_items'     => $questions->get_unanswered_questions_count()
+            //, 'uri_segment'     => 'page'
+            , 'total_items'     => $post_model->get_unanswered_questions_count()
             , 'items_per_page'  => $page_size
         ));
 
         //-- Render View
         $this->template->content = View::factory('themes/default/question_list')
-            ->bind('questions', $questions->get_unanswered_questions($page_number, $page_size, $order_by));
+            ->bind('questions', $post_model->get_unanswered_questions($page_number, $page_size));
     }
 
     /**

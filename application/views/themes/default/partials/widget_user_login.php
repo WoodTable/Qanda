@@ -3,6 +3,9 @@
                 <div id="login-widget" class="widget">
                     <h3>Login</h3>
                     <?php echo form::open('users/login', array('class'=>'login_form', 'method'=>'post')); ?>
+
+                        <?php echo form::hidden('redirect_url', url::current()); ?>
+
                         <?php echo form::label('username', 'Username:'); ?>
                         <?php echo form::input('username', ''); ?>
                         <br/>
