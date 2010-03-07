@@ -1,0 +1,52 @@
+h1. Qanda
+
+Version: 0.1.3-experimental
+Author: Travis Lin <travis[at]travaganza[dot]com[dot]au>
+
+
+
+h2. Description
+
+Qanda is an open-source Question and Answer platform written in PHP 5 and using Kohana MVC framework. It is built with simplicity in mind: lightweight, themable and each to extend.
+
+Qanda is currently under alpha mode development, enthusiast developers are welcome to participate in this project.
+
+
+
+h2. Basic Requirement
+
+* Http Server with Unicode support
+* PHP version 5.2.3 or above
+* MySQL 5.1 or above
+
+Master project is developing under Apache 2.2.11, PHP 5.3.0 and MySQL 5.1.36.
+
+
+
+h2. Install
+
+* Setup table schema by import <code>MYSQL_TABLE_SCHEMAS.sql</code> file.
+* Populate tables by import <code>MYSQL_SAMPLE_RECORDS.sql</code> file.
+* Copy the folder to designated directory
+
+
+
+h2. Configuration
+
+* Update <code>RewriteBase</code> in <code>.htaccess</code> file to reflect to your folder structure
+* Update database connection values in <code>application/config/database.php</code> file.
+
+
+
+h2. Changelog
+
+* [2010-03-07] version 0.1.2 Refactor and incremental update on votes and bookmarks.
+* [2010-03-01] version 0.1.1 Refactor and incremental update on tags and activities.
+* [2010-02-21] version 0.1.0 Initial commit of experimental draft.
+
+
+
+****************************************************************************
+
+
+Copyright (c) 2010 Travis Lin, released under the MIT license
