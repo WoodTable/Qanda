@@ -42,4 +42,20 @@ class Website_Controller extends Template_Controller
         $this->template->set_global('theme_url', 'themes/default/');
 	}
 
+
+
+    protected function log_activity($activity, $object_type, $object_id)
+    {
+        //-- Log User View Activity
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $user = $authentic->get_user();
+            ORM::factory('activity')->log($user->id, $activity, $object_type, $object_id);
+        }
+    }
+
+
+    
+
 }//END class

@@ -19,14 +19,14 @@ class Activity_Model extends ORM
     //protected $belongs_to = array('user');
 
     /**
-     * Track an User Action
+     * Log an User Action
      *
      * @param int $user_id
      * @param string $action_key
      * @param string $object_type
      * @param int $object_id
      */
-    public function track($user_id, $action_key, $object_type, $object_id)
+    public function log($user_id, $action_key, $object_type, $object_id)
     {
         //-- Fetch Activity
         $activity = ORM::factory('activity')
@@ -44,13 +44,13 @@ class Activity_Model extends ORM
             $activity->object_id    = $object_id;
             $activity->blurb        = "user $user_id $action_key $object_type $object_id";
             $activity->date_created = date('Y-m-d H:i:s', time());
-            $activity->created_by   = 'activity::track';
+            $activity->created_by   = 'activity::log';
             $activity->save();
         }
         elseif($activity->is_deleted == 1)
         {//-- Revitalise Activity
             $activity->date_modified = date('Y-m-d H:i:s', time());
-            $activity->modified_by = 'activity::track';
+            $activity->modified_by = 'activity::log';
             $activity->is_deleted = 0;
         }
         else
@@ -59,6 +59,32 @@ class Activity_Model extends ORM
         }
 
         return;
+    }
+
+    /**
+     * Check if Log Exists
+     *
+     * @param int $user_id
+     * @param string $action_key
+     * @param string $object_type
+     * @param int $object_id
+     */
+    public function has_log($user_id, $action_key, $object_type, $object_id)
+    {
+        //-- Fetch Activity
+        $activity = ORM::factory('activity')
+            ->where('user_id', $user_id)
+            ->where('action_key', $action_key)
+            ->where('object_type', $object_type)
+            ->where('object_id', $object_id)
+            ->where('is_deleted', 0)
+            ->find();
+
+        //-- Output
+        if($activity->id == 0)
+            return false;
+        else
+            return true;
     }
 
 }//END class

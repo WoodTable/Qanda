@@ -25,6 +25,7 @@ class Post_Model extends ORM
      * @param int $page_number
      * @param int $page_size
      * @return ORM_Iterator
+     * @static
      */
     public function get_active_questions($page_number, $page_size)
     {
@@ -36,6 +37,7 @@ class Post_Model extends ORM
         $questions = $this
             ->where('is_deleted', 0)
             ->where('post_type', 'question')
+            ->where('status', 'publish')
             ->orderby('last_activity_date', 'desc')
             ->orderby('date_created', 'desc')
             ->find_all($limit, $offset);
@@ -48,13 +50,15 @@ class Post_Model extends ORM
      * Count Questions
      *
      * @return int
+     * @static
      */
-    public function get_all_questions_count()
+    public function count_all_questions()
     {
         //-- Query
         $count = $this
             ->where('is_deleted', 0)
             ->where('post_type', 'question')
+            ->where('status', 'publish')
             ->count_all();
         
         //-- Output
@@ -67,6 +71,7 @@ class Post_Model extends ORM
      * @param int $page_number
      * @param int $page_size
      * @return ORM_Iterator
+     * @static
      */
     public function get_unanswered_questions($page_number, $page_size)
     {
@@ -74,12 +79,11 @@ class Post_Model extends ORM
         $limit = $page_size;
         $offset = ($page_number-1) * $page_size;
 
-        //TODO: Implement usage of $order_by attribute
-
         //-- Query
         $questions = $this
             ->where('is_deleted', 0)
             ->where('post_type', 'question')
+            ->where('status', 'publish')
             ->where('answer_count', 0)
             ->orderby('last_activity_date', 'desc')
             ->orderby('date_created', 'desc')
@@ -93,13 +97,15 @@ class Post_Model extends ORM
      * Count Unanswered Questions
      *
      * @return int
+     * @static
      */
-    public function get_unanswered_questions_count()
+    public function count_unanswered_questions()
     {
         //-- Query
         $count = $this
             ->where('is_deleted', 0)
             ->where('post_type', 'question')
+            ->where('status', 'publish')
             ->where('answer_count', 0)
             ->count_all();
         
@@ -107,12 +113,66 @@ class Post_Model extends ORM
         return $count;
     }
 
+
+
+
+    /**
+     * List Answers of Specified Question
+     *
+     * @param int $question_id
+     * @param int $page_number
+     * @param int $page_size
+     * @return ORM_Iterator
+     * @static
+     */
+    public function get_all_answers($question_id, $page_number, $page_size)
+    {
+        //-- Local Variables
+        $limit = $page_size;
+        $offset = ($page_number-1) * $page_size;
+
+        //-- Query
+        $answers = $this
+            ->where('is_deleted', 0)
+            ->where('post_parent_id', $question_id)
+            ->where('post_type', 'answer')
+            ->where('status', 'publish')
+            ->orderby('last_activity_date', 'desc')
+            ->orderby('date_created', 'desc')
+            ->find_all($limit, $offset);
+
+        //-- Output
+        return $answers;
+    }
+
+
+    /**
+     * Count Number of Answers to a Specified Question
+     *
+     * @return int
+     * @static
+     */
+    public function count_all_answers($question_id)
+    {
+        //-- Query
+        $count = $this
+            ->where('is_deleted', 0)
+            ->where('post_parent_id', $question_id)
+            ->where('post_type', 'answer')
+            ->where('status', 'publish')
+            ->count_all();
+
+        //-- Output
+        return $count;
+    }
+
+
+
     /**
      * Create an Answer to Specified Question
      *
-     * @param string $question_id
      * @param Validation_Object $post
-     * @return bool
+     * @static
      */
     public function create_answer($post)
     {
@@ -195,7 +255,7 @@ class Post_Model extends ORM
             $user->save();
 
             //-- Add User activity
-            ORM::factory('activity')->track($user->id, 'create', 'post', $answer->id);
+            ORM::factory('activity')->log($user->id, 'create', 'post', $answer->id);
 
             //-- Update User's tag involvement
             ORM::factory('tags_user')->tag_answer($user->id, $question->id, $answer->id);
@@ -212,6 +272,7 @@ class Post_Model extends ORM
      *
      * @param Validation_Object $post
      * @return int Id of the newly created question
+     * @static
      */
     public function create_question($post)
     {
@@ -371,6 +432,96 @@ class Post_Model extends ORM
         }
         else
             throw new Exception('Failed to save question.');
+    }
+
+
+
+    /**
+     * Cast a Vote to a Question or Answer
+     *
+     * @param int $post_id
+     * @param int $score 1 or -1
+     * @static
+     */
+    public function vote($post_id, $score)
+    {
+        //-- Sanitize $score value
+        if($score != 1 && $score != -1)
+            throw new Exception('Invalid score value: '.$score.'.');
+        
+        //-- Authentic User
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {//-- Find Current User ID
+            //TODO: Try catch this
+            $user = $authentic->get_user();
+        }
+        else
+            throw new Exception('User has not yet authenticated.');
+
+        //-- Verify Question/Answer
+        $post = ORM::factory('post', $post_id);
+        if($post->id == 0)
+            throw new Exception('Post ID '.$post_id.' not found.');
+
+        //-- Initialise Activity Log
+        $activity = ORM::factory('activity');
+        if($score >= 1)
+            $action_key = 'vote_up';
+        elseif($score <= -1)
+            $action_key = 'vote_down';
+        
+        //-- Check Activity Already Exist
+        if($activity->has_log($user->id, $action_key, 'post', $post_id))
+            throw new Exception('User '.$user->id.' has already '.$action_key.' this post.');
+
+        //-- Increase Up Vote Count
+        if($score >= 1)
+            $post->up_vote_count += 1;
+        elseif($score <= -1)
+            $post->down_vote_count += 1;
+        $post->date_modified    = date('Y-m-d H:i:s', time());
+        $post->modified_by      = 'post::vote';
+        $post->save();
+
+        //-- Log activity
+        $activity->log($user->id, $action_key, 'post', $post_id);
+    }
+
+
+
+    /**
+     * Bookmark a Question
+     *
+     * @param int $question_id
+     * @static
+     */
+    public function bookmark($question_id)
+    {
+        //-- Authentic User
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {//-- Find Current User ID
+            //TODO: Try catch this
+            $user = $authentic->get_user();
+        }
+        else
+            throw new Exception('User has not yet authenticated.');
+
+        //-- Verify Question
+        $question = ORM::factory('post', $question_id);
+        if($question->id == 0)
+            throw new Exception('Question ID '.$question_id.' not found.');
+
+        //-- Initialise Activity Log
+        $activity = ORM::factory('activity');
+
+        //-- Check Activity Already Exist
+        if($activity->has_log($user->id, 'bookmark', 'post', $question_id))
+            throw new Exception('User '.$user->id.' has already bookmark this question.');
+
+        //-- Log activity
+        $activity->log($user->id, 'bookmark', 'post', $question_id);
     }
 
 }//END class

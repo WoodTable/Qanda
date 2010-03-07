@@ -20,16 +20,16 @@
                 <div id="question-<?php echo $question->id; ?>" class="post-detail question clearfix">
                     <div class="panel">
                         <div class="up-vote">
-                            <?php echo html::anchor('#', 'Up'); ?>
+                            <?php echo html::anchor('questions/vote_up/'.$question->id, 'Up'); ?>
                         </div>
                         <div class="score">
                             <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                         </div>
                         <div class="down-vote">
-                            <?php echo html::anchor('#', 'Down'); ?>
+                            <?php echo html::anchor('questions/vote_down/'.$question->id, 'Down'); ?>
                         </div>
                         <div class="favorite">
-                            <?php echo html::anchor('#', 'Fav'); ?>
+                            <?php echo html::anchor('questions/bookmark/'.$question->id, 'Bookmark'); ?>
                             <br/>
                             <?php echo $question->favorite_count; ?>
                         </div>
@@ -100,13 +100,13 @@
 
                             <div class="panel">
                                 <div class="up-vote">
-                                    <?php echo html::anchor('#', 'Up'); ?>
+                                    <?php echo html::anchor('answers/vote_up/'.$answer->id, 'Up'); ?>
                                 </div>
                                 <div class="score">
                                     <?php echo $answer->up_vote_count - $answer->down_vote_count; ?>
                                 </div>
                                 <div class="down-vote">
-                                    <?php echo html::anchor('#', 'Down'); ?>
+                                    <?php echo html::anchor('answers/vote_down/'.$answer->id, 'Down'); ?>
                                 </div>
                             </div><?php /* END .panel */ ?>
 
@@ -152,6 +152,12 @@
                         </div><?php /* END .post-detail */ ?>
 
                     <?php endforeach; ?>
+
+
+                    <?php
+                        if($this->pagination->total_pages > 1)
+                            echo $this->pagination->render('qanda');
+                    ?>
 
                     <?php if(count($answers) == 0): ?>
                         <div class="no-answers">

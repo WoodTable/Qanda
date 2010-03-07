@@ -27,6 +27,8 @@ class Answers_Controller extends Website_Controller
 
     /**
      * Create a New Answer
+     *
+     * @uses Post_Model::create_answer()
      */
     public function create()
     {
@@ -57,10 +59,71 @@ class Answers_Controller extends Website_Controller
         }
         else
         {
-            //TODO: Throw an error
+            throw new Kohana_User_Exception('Bad Landing.', 'You have been direct to this location incorrectly.');
         }
     }
 
+
+    /**
+     * Up Vote an Answer
+     *
+     * @param int $answer_id
+     * @uses Post_Model::vote()
+     */
+    public function vote_up($answer_id)
+    {
+        //-- Local Variables
+        $post_model = ORM::factory('post');
+        $score = 1;
+
+        try
+        {
+            //-- Initialise Model
+            $post_model->vote($answer_id, $score);
+
+            //-- Redirect
+            $answer     = ORM::factory('post', $answer_id);
+            $question   = ORM::factory('post', $answer->post_parent_id);
+            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug.'#'.$answer_id);
+        }
+        catch(Exception $ex)
+        {
+            $message = 'Cannot vote up answer '.$answer_id.'. Caught exception: '.$ex->getMessage();
+            throw new Kohana_User_Exception('Fail to Vote Up', $message);
+        }
+    }
+
+
+    /**
+     * Down Vote an Answer
+     *
+     * @param int $answer_id
+     * @uses Post_Model::vote()
+     */
+    public function vote_down($answer_id)
+    {
+        //-- Local Variables
+        $post_model = ORM::factory('post');
+        $score = -1;
+
+        try
+        {
+            //-- Initialise Model
+            $post_model->vote($answer_id, $score);
+
+            //-- Redirect
+            $answer     = ORM::factory('post', $answer_id);
+            $question   = ORM::factory('post', $answer->post_parent_id);
+            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug.'#'.$answer_id);
+        }
+        catch(Exception $ex)
+        {
+            $message = 'Cannot vote up answer '.$answer_id.'. Caught exception: '.$ex->getMessage();
+            throw new Kohana_User_Exception('Fail to Vote Up', $message);
+        }
+    }
+
+    //----------------------- PLACE HOLDERS --------------------------//
 
     /**
      * Edit Answers Action
