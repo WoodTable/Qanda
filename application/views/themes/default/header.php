@@ -27,15 +27,15 @@
                 <li><?php echo html::anchor('/', 'Questions'); ?></li>
                 <li><?php echo html::anchor('/tags', 'Tags'); ?></li>
                 <li><?php echo html::anchor('/users/browse', 'Users'); ?></li>
-                <li><?php echo html::anchor('/badges', 'Badges'); ?></li>
+                <li><?php echo html::anchor('/badges/browse', 'Badges'); ?></li>
                 <li><?php echo html::anchor('/questions/unanswered', 'Unanswered'); ?></li>
                 <li class="last"><?php echo html::anchor('/questions/ask', 'Ask Question'); ?></li>
             </ul>
 
             <div class="search-engine">
-                <?php echo form::open('questions/search', array('class'=>'search_form', 'method'=>'get')); ?>
+                <?php echo form::open('questions/search', array('class'=>'search_form', 'method'=>'post')); ?>
                     <?php echo form::label('search', 'Search:'); ?>
-                    <?php echo form::input('search', ''); ?>
+                    <?php echo form::input('query', ''); ?>
                     <?php echo form::submit('submit-search', 'Search'); ?>
                 <?php echo form::close(); ?>
             </div>

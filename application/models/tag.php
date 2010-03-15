@@ -27,7 +27,8 @@ class Tag_Model extends ORM
     public function set_user_involvement($tag_id, $user_id)
     {
         //-- Attempt to Fetch Existing Tag Involvement
-        $tags_user = ORM::factory('tags_user')->where('tag_id', $tag_id)
+        $tags_user = ORM::factory('tags_user')
+            ->where('tag_id', $tag_id)
             ->where('user_id', $user_id)
             ->where('relation_type', 'involved')
             ->find();
@@ -63,6 +64,42 @@ class Tag_Model extends ORM
         }
     }
 
+    /**
+     * Get Tags that Specified User Involved it
+     *
+     * Involvement includes asking questions or anwering questions belongs
+     * to those tags
+     * 
+     * @param int $user_id
+     */
+    public function get_inolved_tags($user_id)
+    {
+        //-- Get Tag Relations
+        $tags_user = ORM::factory('tags_user')
+            ->where('user_id', $user_id)
+            ->where('relation_type', 'involved')
+            ->where('is_deleted', 0)
+            ->find_all();
 
+        //-- Extract IDs
+        $tag_ids = array();
+        foreach($tags_user as $tag_user)
+        {
+            $tag_ids[] = $tag_user->tag_id;
+        }
+        if(count($tag_ids) <= 0)
+        {//HACK: So that the array is non-empty and won't trigger syntax error when perform query
+            $tag_ids[] = -1;
+        }
+        
+        //-- Get Tags
+        $tags = ORM::factory('tag')
+            ->in('id', $tag_ids)
+            ->orderby('name', 'asc')
+            ->find_all();
+        
+        //-- Output
+        return $tags;
+    }
 
 }//END class

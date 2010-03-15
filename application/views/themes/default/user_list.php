@@ -18,20 +18,13 @@
 
                 <div class="users-list clearfix">
                     <?php foreach($users as $index => $user): ?>
-                        <div class="user-summary clearfix">
-                            <div class="avatar">
-                                <a href="<?php echo url::site('users/detail/'.$user->username); ?>">
-                                    <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=32&d=identicon&r=PG'); ?>" width="32" height="32" alt="" />
-                                </a>
-                            </div>
-                            <div class="user-details">
-                                <a href="<?php echo url::site('users/detail/'.$user->username); ?>">
-                                    <?php echo $user->username; ?>
-                                </a>
-                                <br/>
-                                R:<?php echo $user->reputation_score; ?> | B:<?php echo $user->badge_count; ?>
-                            </div>
-                        </div>
+
+                        <?php
+                            $form       = View::factory($theme_url.'partials/user_flair');
+                            $form->user = $user;
+                            $form->render(TRUE);
+                        ?>
+
                     <?php endforeach; ?>
                 </div>
 

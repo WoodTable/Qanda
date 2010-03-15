@@ -36,6 +36,8 @@
                             <div class="label">Display Name:</div>
                             <div class="value"><?php echo $user->display_name; ?></div>
                         </div>
+
+                        <?php /***travo20100313
                         <div class="email clearfix">
                             <div class="label">Email:</div>
                             <div class="value"><?php echo $user->email; ?></div>
@@ -44,6 +46,8 @@
                             <div class="label">Birthday:</div>
                             <div class="value"><?php echo $user->birthday; ?></div>
                         </div>
+                        */ ?>
+                        
                         <div class="location clearfix">
                             <div class="label">Location:</div>
                             <div class="value"><?php echo $user->location; ?></div>
@@ -61,9 +65,65 @@
                 </div><?php /* END .vcard */ ?>
 
 
+                <div class="asked_questions">
+                    <div class="subheader">
+                        <h2><?php echo count($asked_questions).' '.inflector::plural('question', count($asked_questions)); ?></h2>
+                        <?php foreach($asked_questions as $index => $question): ?>
+                            <div class="question">
+                                <span>
+                                    <?php echo $question->favorite_count; ?>
+                                    | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
+                                    | <?php echo $question->answer_count; ?>
+                                    | <?php echo $question->view_count; ?>
+                                    | <?php echo $question->title; ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div><?php /* END .asked_questions */ ?>
+
+                
+                <div class="answered_questions">
+                    <div class="subheader">
+                        <h2><?php echo count($answered_questions).' '.inflector::plural('answer', count($answered_questions)); ?></h2>
+                        <?php foreach($answered_questions as $index => $question): ?>
+                            <div class="question">
+                                <span>
+                                    <?php echo $question->favorite_count; ?>
+                                    | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
+                                    | <?php echo $question->answer_count; ?>
+                                    | <?php echo $question->view_count; ?>
+                                    | <?php echo $question->title; ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div><?php /* END .answered_questions */ ?>
+
+
+                <div class="casted_votes">
+                    <div class="subheader">
+                        <h2><?php echo ($user->up_vote_casted + $user->down_vote_casted).' '.inflector::plural('vote', ($user->up_vote_casted + $user->down_vote_casted)); ?></h2>
+                        <span><?php echo $user->up_vote_casted; ?> up votes casted</span>
+                        <br/><span><?php echo $user->down_vote_casted; ?> down votes casted</span>
+                    </div>
+                </div>
+
+                
+                <div class="involved_tags">
+                    <div class="subheader">
+                        <h2><?php echo count($involved_tags).' '.inflector::plural('tag', count($involved_tags)); ?></h2>
+                        <?php foreach($involved_tags as $index => $tag): ?>
+                            <div class="tag">
+                                <span>
+                                    <?php echo $tag->name; ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div><?php /* END .involved_tags */ ?>
 
             </div><?php /* END .main-bar */ ?>
-
 
 
         </div><?php /* END #content */ ?>

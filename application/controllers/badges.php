@@ -24,38 +24,32 @@ class Badges_Controller extends Website_Controller
     {
         parent::__construct(); //-- This must be included
     }
+    
+    //----------------------- PLACE HOLDERS --------------------------//
 
     /**
-     * Default Landing Action
+     * Browse a List of Badges
+     *
+     * @param string $order_by
      */
-    public function index()
+    public function browse($order_by='active')
     {
-        //-- Reroute to 'show' action
-        $this->show();
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
     /**
-     * Show a List of Badges
+     * View owners of a badge
+     *
+     * @param int $badge_id
+     * @param string $slug
+     * @param string $filler Does nothing
+     * @param int $page_number
+     * @param string $order_by
+     * @param int $page_size
      */
-    public function show($current_page=1, $page_count=10, $sort_by='popular')
+    public function detail($badge_id, $slug='', $filler='page', $page_number=1, $order_by='votes', $page_size=25)
     {
-        //-- Model
-        $badges = ORM::factory('badge');
-        $badges = $badges->orderby('name', 'asc')
-            ->where('is_deleted', 0)
-            ->find_all();
-
-        //-- Render View
-        $this->template->content = View::factory('themes/default/badge_list')
-            ->bind('badges', $badges);
-    }
-
-    /**
-     * View Details of a Badge
-     */
-    public function detail($badge_id, $slug='')
-    {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
     
     /**
@@ -63,7 +57,7 @@ class Badges_Controller extends Website_Controller
      */
     public function search($query)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
     
 }//END class

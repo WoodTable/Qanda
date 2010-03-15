@@ -113,6 +113,72 @@ class Post_Model extends ORM
         return $count;
     }
 
+    /**
+     * List Questions Asked by Specified User
+     *
+     * @param int $user_id
+     * @return ORM_Iterator
+     * @static
+     */
+    public function get_asked_questions($user_id)
+    {
+        //-- Local Variables
+
+        //-- Query
+        $questions = $this
+            ->where('is_deleted', 0)
+            ->where('post_type', 'question')
+            ->where('status', 'publish')
+            ->where('user_id', $user_id)
+            ->orderby('date_created', 'desc')
+            ->find_all();
+
+        //-- Output
+        return $questions;
+    }
+
+
+
+    /**
+     * List Questions Answered by Specified User
+     *
+     * @param int $user_id
+     * @return ORM_Iterator
+     * @static
+     */
+    public function get_answered_questions($user_id)
+    {
+        //-- Local Variables
+
+        //-- Query
+        $answers = $this
+            ->where('is_deleted', 0)
+            ->where('post_type', 'answer')
+            ->where('status', 'publish')
+            ->where('user_id', $user_id)
+            ->find_all();
+
+        //--
+        $answer_ids = array();
+        foreach($answers as $answer)
+        {
+            $answer_ids[] = $answer->post_parent_id;
+        }
+        if(count($answer_ids) <= 0)
+        {//HACK: So that the array is non-empty and won't trigger syntax error when perform query
+            $answer_ids[] = -1;
+        }
+
+        //--
+        //TODO: Order by Answering date
+        $answered_questions = $this
+            ->in('id', $answer_ids)
+            ->find_all();
+
+        //-- Output
+        return $answered_questions;
+    }
+
 
 
 
@@ -145,7 +211,6 @@ class Post_Model extends ORM
         return $answers;
     }
 
-
     /**
      * Count Number of Answers to a Specified Question
      *
@@ -165,8 +230,6 @@ class Post_Model extends ORM
         //-- Output
         return $count;
     }
-
-
 
     /**
      * Create an Answer to Specified Question
@@ -434,21 +497,14 @@ class Post_Model extends ORM
             throw new Exception('Failed to save question.');
     }
 
-
-
     /**
-     * Cast a Vote to a Question or Answer
+     * Cast a Up Vote to a Question or Answer
      *
      * @param int $post_id
-     * @param int $score 1 or -1
      * @static
      */
-    public function vote($post_id, $score)
+    public function vote_up($post_id)
     {
-        //-- Sanitize $score value
-        if($score != 1 && $score != -1)
-            throw new Exception('Invalid score value: '.$score.'.');
-        
         //-- Authentic User
         $authentic = Auth::factory();
         if ($authentic->logged_in())
@@ -466,29 +522,78 @@ class Post_Model extends ORM
 
         //-- Initialise Activity Log
         $activity = ORM::factory('activity');
-        if($score >= 1)
-            $action_key = 'vote_up';
-        elseif($score <= -1)
-            $action_key = 'vote_down';
-        
+        $action_key = 'vote_up';
+
         //-- Check Activity Already Exist
         if($activity->has_log($user->id, $action_key, 'post', $post_id))
             throw new Exception('User '.$user->id.' has already '.$action_key.' this post.');
 
         //-- Increase Up Vote Count
-        if($score >= 1)
-            $post->up_vote_count += 1;
-        elseif($score <= -1)
-            $post->down_vote_count += 1;
+        $post->up_vote_count   += 1;
         $post->date_modified    = date('Y-m-d H:i:s', time());
-        $post->modified_by      = 'post::vote';
+        $post->modified_by      = 'post::vote_up';
         $post->save();
+
+        //-- Increment Author's Score
+        $reputation_score   = 10;
+        $user_model         = ORM::factory('user');
+        $user_model->adjust_reputation($post->user_id, $reputation_score);
+
+        //-- Increment Caster's Cast Count
+        $user_model->increment_up_vote_casted($user->id);
 
         //-- Log activity
         $activity->log($user->id, $action_key, 'post', $post_id);
     }
 
+    /**
+     * Cast a Down Vote to a Question or Answer
+     *
+     * @param int $post_id
+     * @static
+     */
+    public function vote_down($post_id)
+    {
+        //-- Authentic User
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {//-- Find Current User ID
+            //TODO: Try catch this
+            $user = $authentic->get_user();
+        }
+        else
+            throw new Exception('User has not yet authenticated.');
 
+        //-- Verify Question/Answer
+        $post = ORM::factory('post', $post_id);
+        if($post->id == 0)
+            throw new Exception('Post ID '.$post_id.' not found.');
+
+        //-- Initialise Activity Log
+        $activity = ORM::factory('activity');
+        $action_key = 'vote_down';
+
+        //-- Check Activity Already Exist
+        if($activity->has_log($user->id, $action_key, 'post', $post_id))
+            throw new Exception('User '.$user->id.' has already '.$action_key.' this post.');
+
+        //-- Increase Down Vote Count
+        $post->down_vote_count += 1;
+        $post->date_modified    = date('Y-m-d H:i:s', time());
+        $post->modified_by      = 'post::vote_down';
+        $post->save();
+
+        //-- Increment Author's Score
+        $reputation_score   = -2;
+        $user_model         = ORM::factory('user');
+        $user_model->adjust_reputation($post->user_id, $reputation_score);
+
+        //-- Increment Caster's Cast Count
+        $user_model->increment_down_vote_casted($user->id);
+
+        //-- Log activity
+        $activity->log($user->id, $action_key, 'post', $post_id);
+    }
 
     /**
      * Bookmark a Question

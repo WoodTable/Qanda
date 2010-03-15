@@ -74,12 +74,11 @@ class Answers_Controller extends Website_Controller
     {
         //-- Local Variables
         $post_model = ORM::factory('post');
-        $score = 1;
 
         try
         {
             //-- Initialise Model
-            $post_model->vote($answer_id, $score);
+            $post_model->vote_up($answer_id);
 
             //-- Redirect
             $answer     = ORM::factory('post', $answer_id);
@@ -104,12 +103,11 @@ class Answers_Controller extends Website_Controller
     {
         //-- Local Variables
         $post_model = ORM::factory('post');
-        $score = -1;
 
         try
         {
             //-- Initialise Model
-            $post_model->vote($answer_id, $score);
+            $post_model->vote_down($answer_id);
 
             //-- Redirect
             $answer     = ORM::factory('post', $answer_id);

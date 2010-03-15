@@ -27,6 +27,8 @@ class Users_Controller extends Website_Controller
 
     /**
      * Show a List of Users
+     *
+     * @uses User_Model::list_all_users()
      */
     public function browse()
     {
@@ -41,19 +43,38 @@ class Users_Controller extends Website_Controller
 
     /**
      * View User Details
+     *
+     * @param string $username
+     * @uses Post_Model::get_asked_questions()
+     * @uses Post_Model::get_answered_questions()
+     * @uses Tag_Model::get_involved_tags()
      */
     public function detail($username)
     {
-        //-- Model
+        //-- Get User
         $user = ORM::factory('user')->get($username);
+
+        //-- Get User Involvements
+        //TODO: Paginate it
+        $asked_questions    = ORM::factory('post')->get_asked_questions($user->id);
+        //TODO: Paginate it
+        $answered_questions = ORM::factory('post')->get_answered_questions($user->id);
+        //TODO: Limit Number of Tags Shown (instead of Paginate)
+        $involved_tags      = ORM::factory('tag')->get_inolved_tags($user->id);
         
         //-- Render View
         $this->template->content = View::factory('themes/default/user_detail')
-            ->bind('user', $user);
+            ->bind('user', $user)
+            ->bind('asked_questions', $asked_questions)
+            ->bind('answered_questions', $answered_questions)
+            ->bind('involved_tags', $involved_tags)
+            ;
     }
 
     /**
      * User Login
+     *
+     * @uses User_Model::authenticate()
      */
     public function login()
     {

@@ -140,4 +140,50 @@ class User_Model extends Auth_User_Model
         }
     }
 
+    /**
+     * Adjust User's Reputation
+     *
+     * @param int $user_id
+     * @param int $reputation_score
+     * @static
+     */
+    public function adjust_reputation($user_id, $reputation_score)
+    {
+        $user = ORM::factory('user', $user_id);
+        $user->reputation_score    += $reputation_score;
+        $user->date_modified        = date('Y-m-d H:i:s', time());
+        $user->modified_by          = 'user::adjust_reputation';
+        $user->save();
+    }
+    
+    /**
+     * Increase number of Up Vote Casted Count
+     *
+     * @param int $user_id
+     * @static
+     */
+    public function increment_up_vote_casted($user_id)
+    {
+        $user = ORM::factory('user', $user_id);
+        $user->up_vote_casted  += 1;
+        $user->date_modified    = date('Y-m-d H:i:s', time());
+        $user->modified_by      = 'user::increment_up_vote_casted';
+        $user->save();
+    }
+
+    /**
+     * Increase number of Down Vote Casted Count
+     *
+     * @param int $user_id
+     * @static
+     */
+    public function increment_down_vote_casted($user_id)
+    {
+        $user = ORM::factory('user', $user_id);
+        $user->down_vote_casted    += 1;
+        $user->date_modified        = date('Y-m-d H:i:s', time());
+        $user->modified_by          = 'user::increment_down_vote_casted';
+        $user->save();
+    }
+
 }//END class

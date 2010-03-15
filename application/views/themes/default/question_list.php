@@ -47,7 +47,7 @@
                         </ul>
                         <div class="meta">
                             By:
-                            <?php echo html::anchor('users/detail/'.$question->user->username, $question->user->username); ?>
+                            <?php echo html::anchor('users/detail/'.$question->user->username, $question->user->display_name); ?>
                             (<?php echo $question->user->reputation_score; ?>)
                         </div>
                     </div>

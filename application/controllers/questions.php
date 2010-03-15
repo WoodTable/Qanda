@@ -135,12 +135,11 @@ class Questions_Controller extends Website_Controller
     {
         //-- Local Variables
         $post_model = ORM::factory('post');
-        $score = 1;
         
         try
         {
             //-- Initialise Model
-            $post_model->vote($question_id, $score);
+            $post_model->vote_up($question_id, $score);
 
             //-- Redirect
             $question = ORM::factory('post', $question_id);
@@ -163,12 +162,11 @@ class Questions_Controller extends Website_Controller
     {
         //-- Local Variables
         $post_model = ORM::factory('post');
-        $score = -1;
 
         try
         {
             //-- Initialise Model
-            $post_model->vote($question_id, $score);
+            $post_model->vote_down($question_id, $score);
 
             //-- Redirect
             $question = ORM::factory('post', $question_id);
@@ -304,8 +302,18 @@ class Questions_Controller extends Website_Controller
     /**
      * Search Questions with Specified Criteria
      */
-    public function search($query)
+    public function search($query='', $page_number=1, $page_size=25)
     {
+        //-- Detect a Post Back
+        if($_POST)
+        {
+            $post = Validation::factory($_POST);
+            //...
+        }
+        else
+        {
+            //...
+        }
         $this->template->content = "Method Not Implemented Yet.";
     }
 

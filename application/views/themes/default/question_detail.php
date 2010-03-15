@@ -56,21 +56,11 @@
                             <?php endforeach; ?>
                         </ul>
 
-                        <div class="user-summary clearfix">
-                            <div class="avatar">
-                                <a href="<?php echo url::site('users/detail/'.$question->user->id); ?>">
-                                    <?php /* TODO: Use real gravatar API */ ?>
-                                    <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=32&d=identicon&r=PG'); ?>" width="32" height="32" alt="" />
-                                </a>
-                            </div>
-                            <div class="user-details">
-                                <a href="<?php echo url::site('users/detail/'.$question->user->username); ?>">
-                                    <?php echo $question->user->username; ?>
-                                </a>
-                                <br/>
-                                R:<?php echo $question->user->reputation_score; ?> | B:<?php echo $question->user->badge_count; ?>
-                            </div>
-                        </div>
+                        <?php
+                            $form       = View::factory($theme_url.'partials/user_flair');
+                            $form->user = $question->user;
+                            $form->render(TRUE);
+                        ?>
 
                         <?php /***travo20100227: Not Implemented
                         <div class="meta">
@@ -119,21 +109,11 @@
                                     ?>
                                 </div>
 
-                                <div class="user-summary clearfix">
-                                    <div class="avatar">
-                                        <a href="<?php echo url::site('users/detail/'.$answer->user->username); ?>">
-                                            <?php /* TODO: Use real gravatar API */ ?>
-                                            <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=32&d=identicon&r=PG'); ?>" width="32" height="32" alt="" />
-                                        </a>
-                                    </div>
-                                    <div class="user-details">
-                                        <a href="<?php echo url::site('users/detail/'.$answer->user->id); ?>">
-                                            <?php echo $answer->user->username; ?>
-                                        </a>
-                                        <br/>
-                                        R:<?php echo $answer->user->reputation_score; ?> | B:<?php echo $answer->user->badge_count; ?>
-                                    </div>
-                                </div>
+                                <?php
+                                    $form       = View::factory($theme_url.'partials/user_flair');
+                                    $form->user = $answer->user;
+                                    $form->render(TRUE);
+                                ?>
 
                                 <?php /***travo20100227: Not Implemented
                                 <div class="meta">
