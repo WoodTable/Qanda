@@ -1,6 +1,6 @@
 h1. Qanda
 
-Version: 0.1.3-experimental
+Version: 0.1.4
 Author: Travis Lin <travis[at]travaganza[dot]com[dot]au>
 
 
@@ -40,10 +40,7 @@ h2. Configuration
 
 h2. Changelog
 
-* [2010-03-07] version 0.1.2 Refactor and incremental update on votes and bookmarks.
-* [2010-03-01] version 0.1.1 Refactor and incremental update on tags and activities.
-* [2010-02-21] version 0.1.0 Initial commit of experimental draft.
-
+Currently under pre-alpha mode (known as experimental mode) and changes are currently too fine to be recorded in changelog. This section will be populated once 1.0-beta is in place.
 
 
 ****************************************************************************
