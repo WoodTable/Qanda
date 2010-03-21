@@ -43,7 +43,6 @@
                     <div class="detail">
                         <div class="content">
                             <?php
-                                //echo text::auto_p($question->content);
                                 echo nl2br($question->content);
                             ?>
                         </div>
@@ -98,6 +97,11 @@
                                 <div class="down-vote">
                                     <?php echo html::anchor('answers/vote_down/'.$answer->id, 'Down'); ?>
                                 </div>
+                                <?php if($show_accept_button == true): ?>
+                                    <div class="accept-answer">
+                                        <?php echo html::anchor('answers/accept/'.$answer->id, 'Accept Answer'); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div><?php /* END .panel */ ?>
 
 

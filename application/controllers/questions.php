@@ -78,17 +78,30 @@ class Questions_Controller extends Website_Controller
 
 
         //-- Get Answers
-        $post_model     = ORM::factory('post');
-        $total_items    = $post_model->count_all_answers($question_id);
-        $answers        = $post_model->get_all_answers($question_id, $page_number, $page_size);
+        $total_items    = ORM::factory('post')->count_all_answers($question_id);
+        $answers        = ORM::factory('post')->get_all_answers($question_id, $page_number, $page_size);
 
+        //-- Display 'Accept Answer Button'
+        $show_accept_button = false;
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $user = $authentic->get_user();
+            if($user->id == $question->user_id)
+            {
+                $show_accept_button = true;
+            }
+        }
+        
         //-- Set Pagination
         $this->set_pagination("questions/detail/$question_id/$question->slug", $total_items, $page_size);
 
         //-- Render View
         $this->template->content = View::factory('themes/default/question_detail')
             ->bind('question', $question)
-            ->bind('answers', $answers);
+            ->bind('answers', $answers)
+            ->bind('show_accept_button', $show_accept_button)
+            ;
     }
 
     /**
@@ -133,13 +146,10 @@ class Questions_Controller extends Website_Controller
      */
     public function vote_up($question_id)
     {
-        //-- Local Variables
-        $post_model = ORM::factory('post');
-        
         try
         {
             //-- Initialise Model
-            $post_model->vote_up($question_id, $score);
+            ORM::factory('post')->vote_up($question_id);
 
             //-- Redirect
             $question = ORM::factory('post', $question_id);
@@ -160,13 +170,10 @@ class Questions_Controller extends Website_Controller
      */
     public function vote_down($question_id)
     {
-        //-- Local Variables
-        $post_model = ORM::factory('post');
-
         try
         {
             //-- Initialise Model
-            $post_model->vote_down($question_id, $score);
+            ORM::factory('post')->vote_down($question_id);
 
             //-- Redirect
             $question = ORM::factory('post', $question_id);
@@ -187,13 +194,10 @@ class Questions_Controller extends Website_Controller
      */
     public function bookmark($question_id)
     {
-        //-- Local Variables
-        $post_model = ORM::factory('post');
-
         try
         {
             //-- Initialise Model
-            $post_model->bookmark($question_id);
+            ORM::factory('post')->bookmark($question_id);
 
             //-- Redirect
             $question = ORM::factory('post', $question_id);
@@ -220,9 +224,8 @@ class Questions_Controller extends Website_Controller
     private function browse_active($page_number, $page_size)
     {
         //-- Initialise Model
-        $post_model     = ORM::factory('post');
-        $total_items    = $post_model->count_all_questions();
-        $questions      = $post_model->get_active_questions($page_number, $page_size);
+        $total_items    = ORM::factory('post')->count_all_questions();
+        $questions      = ORM::factory('post')->get_active_questions($page_number, $page_size);
 
         //-- Set Pagination
         $this->set_pagination('questions/browse', $total_items, $page_size);
@@ -244,9 +247,8 @@ class Questions_Controller extends Website_Controller
     private function browse_unanswered($page_number, $page_size)
     {
         //-- Initialise Model
-        $post_model     = ORM::factory('post');
-        $total_items    = $post_model->count_unanswered_questions();
-        $questions      = $post_model->get_unanswered_questions($page_number, $page_size);
+        $total_items    = ORM::factory('post')->count_unanswered_questions();
+        $questions      = ORM::factory('post')->get_unanswered_questions($page_number, $page_size);
 
         //-- Set Pagination
         $this->set_pagination('questions/unanswered', $total_items, $page_size);

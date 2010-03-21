@@ -25,6 +25,7 @@ class Activity_Model extends ORM
      * @param string $action_key
      * @param string $object_type
      * @param int $object_id
+     * @static
      */
     public function log($user_id, $action_key, $object_type, $object_id)
     {
@@ -43,13 +44,13 @@ class Activity_Model extends ORM
             $activity->object_type  = $object_type;
             $activity->object_id    = $object_id;
             $activity->blurb        = "user $user_id $action_key $object_type $object_id";
-            $activity->date_created = date('Y-m-d H:i:s', time());
+            $activity->date_created = date::timestamp();
             $activity->created_by   = 'activity::log';
             $activity->save();
         }
         elseif($activity->is_deleted == 1)
         {//-- Revitalise Activity
-            $activity->date_modified = date('Y-m-d H:i:s', time());
+            $activity->date_modified = date::timestamp();
             $activity->modified_by = 'activity::log';
             $activity->is_deleted = 0;
         }
@@ -68,6 +69,7 @@ class Activity_Model extends ORM
      * @param string $action_key
      * @param string $object_type
      * @param int $object_id
+     * @static
      */
     public function has_log($user_id, $action_key, $object_type, $object_id)
     {

@@ -86,11 +86,11 @@ class User_Model extends Auth_User_Model
         $user->email                    = $email;
         $user->password                 = $password;
         $user->activation_key           = strtolower(text::random('alnum', 32));
-        $user->last_activity_date       = date('Y-m-d H:i:s', time());
+        $user->last_activity_date       = date::timestamp();
         $user->last_ip_address          = Input::instance()->ip_address();
         $user->last_user_agent          = Kohana::user_agent();
         $user->consecutive_visit_day    = 1;
-        $user->date_created             = date('Y-m-d H:i:s', time());
+        $user->date_created             = date::timestamp();
         $user->created_by               = 'user::create_user';
 
         //-- Insert user and its role
@@ -151,7 +151,7 @@ class User_Model extends Auth_User_Model
     {
         $user = ORM::factory('user', $user_id);
         $user->reputation_score    += $reputation_score;
-        $user->date_modified        = date('Y-m-d H:i:s', time());
+        $user->date_modified        = date::timestamp();
         $user->modified_by          = 'user::adjust_reputation';
         $user->save();
     }
@@ -166,7 +166,7 @@ class User_Model extends Auth_User_Model
     {
         $user = ORM::factory('user', $user_id);
         $user->up_vote_casted  += 1;
-        $user->date_modified    = date('Y-m-d H:i:s', time());
+        $user->date_modified    = date::timestamp();
         $user->modified_by      = 'user::increment_up_vote_casted';
         $user->save();
     }
@@ -181,7 +181,7 @@ class User_Model extends Auth_User_Model
     {
         $user = ORM::factory('user', $user_id);
         $user->down_vote_casted    += 1;
-        $user->date_modified        = date('Y-m-d H:i:s', time());
+        $user->date_modified        = date::timestamp();
         $user->modified_by          = 'user::increment_down_vote_casted';
         $user->save();
     }

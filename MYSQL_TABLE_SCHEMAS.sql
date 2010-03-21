@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `qa_users` (
     `down_vote_casted`      int(11) unsigned    NOT NULL DEFAULT '0',
     `badge_count`           int(11) unsigned    NOT NULL DEFAULT '0',
     `question_viewed`       int(11) unsigned    NOT NULL DEFAULT '0',
-    `post_favorited`        int(11) unsigned    NOT NULL DEFAULT '0',
+    `post_bookmarked`        int(11) unsigned    NOT NULL DEFAULT '0',
     `profile_view_count`    int(11) unsigned    NOT NULL DEFAULT '0' COMMENT 'number of times viewed by others',
     `consecutive_visit_day` int(11) unsigned    NOT NULL DEFAULT '0',
     `consecutive_answer_day` int(11) unsigned   NOT NULL DEFAULT '0',
@@ -120,10 +120,10 @@ CREATE TABLE IF NOT EXISTS `qa_posts` (
     `title`                 text                NOT NULL,
     `slug`                  varchar(200)        NOT NULL DEFAULT '',
     `content`               longtext            NOT NULL,
-    `status`                varchar(20)         NOT NULL DEFAULT 'publish'  COMMENT 'publish|hidden|bounty(only applicable to questions)|accepted(only applicable to answers)',
-    `post_parent_id`        bigint(20) unsigned NOT NULL DEFAULT '0'        COMMENT 'Parent question of an answer, or Parent of a comment',
-    `post_type`             varchar(20)         NOT NULL DEFAULT ''         COMMENT 'question|answer|comment|revision',
-    `post_mode`             varchar(20)         NOT NULL DEFAULT 'normal'   COMMENT 'normal|wiki|discussion',
+    `status`                varchar(20)         NOT NULL DEFAULT 'publish'  COMMENT 'publish|closed|bounty(only applicable to questions)|accepted(only applicable to answers)|answered(only application to questions)',
+    `parent_id`             bigint(20) unsigned NOT NULL DEFAULT '0'        COMMENT 'Parent question of an answer, or Parent of a comment',
+    `type`                  varchar(20)         NOT NULL DEFAULT ''         COMMENT 'question|answer|comment',
+    `mode`                  varchar(20)         NOT NULL DEFAULT 'normal'   COMMENT 'normal|wiki|discussion',
     
     -- Calculated Values
     `up_vote_count`         int(11)             NOT NULL DEFAULT '0',
@@ -143,8 +143,8 @@ CREATE TABLE IF NOT EXISTS `qa_posts` (
     
     PRIMARY KEY (`id`),
     KEY `slug` (`slug`),
-    KEY `type_status_date` (`post_type`,`status`,`date_created`,`id`),
-    KEY `post_parent_id` (`post_parent_id`)
+    KEY `type_status_date` (`type`,`status`,`date_created`,`id`),
+    KEY `parent_id` (`parent_id`)
 );
 
 

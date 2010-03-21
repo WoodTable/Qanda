@@ -36,8 +36,7 @@ class Post_Model extends ORM
         //-- Query
         $questions = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'question')
-            ->where('status', 'publish')
+            ->where('type', 'question')
             ->orderby('last_activity_date', 'desc')
             ->orderby('date_created', 'desc')
             ->find_all($limit, $offset);
@@ -57,8 +56,7 @@ class Post_Model extends ORM
         //-- Query
         $count = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'question')
-            ->where('status', 'publish')
+            ->where('type', 'question')
             ->count_all();
         
         //-- Output
@@ -82,8 +80,7 @@ class Post_Model extends ORM
         //-- Query
         $questions = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'question')
-            ->where('status', 'publish')
+            ->where('type', 'question')
             ->where('answer_count', 0)
             ->orderby('last_activity_date', 'desc')
             ->orderby('date_created', 'desc')
@@ -104,8 +101,7 @@ class Post_Model extends ORM
         //-- Query
         $count = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'question')
-            ->where('status', 'publish')
+            ->where('type', 'question')
             ->where('answer_count', 0)
             ->count_all();
         
@@ -127,8 +123,7 @@ class Post_Model extends ORM
         //-- Query
         $questions = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'question')
-            ->where('status', 'publish')
+            ->where('type', 'question')
             ->where('user_id', $user_id)
             ->orderby('date_created', 'desc')
             ->find_all();
@@ -136,8 +131,6 @@ class Post_Model extends ORM
         //-- Output
         return $questions;
     }
-
-
 
     /**
      * List Questions Answered by Specified User
@@ -153,8 +146,7 @@ class Post_Model extends ORM
         //-- Query
         $answers = $this
             ->where('is_deleted', 0)
-            ->where('post_type', 'answer')
-            ->where('status', 'publish')
+            ->where('type', 'answer')
             ->where('user_id', $user_id)
             ->find_all();
 
@@ -162,7 +154,7 @@ class Post_Model extends ORM
         $answer_ids = array();
         foreach($answers as $answer)
         {
-            $answer_ids[] = $answer->post_parent_id;
+            $answer_ids[] = $answer->parent_id;
         }
         if(count($answer_ids) <= 0)
         {//HACK: So that the array is non-empty and won't trigger syntax error when perform query
@@ -178,9 +170,6 @@ class Post_Model extends ORM
         //-- Output
         return $answered_questions;
     }
-
-
-
 
     /**
      * List Answers of Specified Question
@@ -200,9 +189,8 @@ class Post_Model extends ORM
         //-- Query
         $answers = $this
             ->where('is_deleted', 0)
-            ->where('post_parent_id', $question_id)
-            ->where('post_type', 'answer')
-            ->where('status', 'publish')
+            ->where('parent_id', $question_id)
+            ->where('type', 'answer')
             ->orderby('last_activity_date', 'desc')
             ->orderby('date_created', 'desc')
             ->find_all($limit, $offset);
@@ -214,6 +202,7 @@ class Post_Model extends ORM
     /**
      * Count Number of Answers to a Specified Question
      *
+     * @param int $question_id
      * @return int
      * @static
      */
@@ -222,9 +211,8 @@ class Post_Model extends ORM
         //-- Query
         $count = $this
             ->where('is_deleted', 0)
-            ->where('post_parent_id', $question_id)
-            ->where('post_type', 'answer')
-            ->where('status', 'publish')
+            ->where('parent_id', $question_id)
+            ->where('type', 'answer')
             ->count_all();
 
         //-- Output
@@ -277,7 +265,7 @@ class Post_Model extends ORM
             //TODO: last ip address
             //TODO: last user agent
             //TODO: question count
-            $user->date_created = date('Y-m-d H:i:s', time());
+            $user->date_created = date::timestamp();
             $user->created_by   = 'post::create_question';
             $user->add(ORM::factory('role', 'guest'));
             try
@@ -293,10 +281,10 @@ class Post_Model extends ORM
         //-- Save Answer
         $answer                 = ORM::factory('post');
         $answer->user_id        = $user->id;
-        $answer->post_parent_id = $question_id;
+        $answer->parent_id      = $question_id;
         $answer->content        = $body;
-        $answer->post_type      = 'answer';
-        $answer->date_created   = date('Y-m-d H:i:s', time());
+        $answer->type           = 'answer';
+        $answer->date_created   = date::timestamp();
         $answer->created_by     = 'question::detail';
         //TODO: Needs to handle exception
         $success                = $answer->save();
@@ -307,8 +295,8 @@ class Post_Model extends ORM
             //-- Update Question's answer count and last activity date
             $question = ORM::factory('post', $question_id);
             $question->answer_count += 1;
-            $question->last_activity_date = date('Y-m-d H:i:s', time());
-            $question->date_modified = date('Y-m-d H:i:s', time());
+            $question->last_activity_date = date::timestamp();
+            $question->date_modified = date::timestamp();
             $question->modified_by = 'post::create_answer';
             $question->save();
             
@@ -379,7 +367,7 @@ class Post_Model extends ORM
             //TODO: last ip address
             //TODO: last user agent
             //TODO: question count
-            $user->date_created = date('Y-m-d H:i:s', time());
+            $user->date_created = date::timestamp();
             $user->created_by   = 'post::create_question';
             $user->add(ORM::factory('role', 'guest'));
             try
@@ -398,9 +386,9 @@ class Post_Model extends ORM
         $question->title        = $title;
         $question->slug         = url::title($title);
         $question->content      = $body;
-        $question->post_type    = 'question';
-        $question->last_activity_date = date('Y-m-d H:i:s', time());
-        $question->date_created = date('Y-m-d H:i:s', time());
+        $question->type         = 'question';
+        $question->last_activity_date = date::timestamp();
+        $question->date_created = date::timestamp();
         $question->created_by   = 'post::create_question';
 
         //TODO: Tag management should be a seperate concern
@@ -429,7 +417,7 @@ class Post_Model extends ORM
                 $tag->name = $tag_name;
                 $tag->slug = $tag_slug;
                 $tag->post_count = 1;
-                $tag->date_created = date('Y-m-d H:i:s', time());
+                $tag->date_created = date::timestamp();
                 $tag->created_by = 'post::create_question';
                 try
                 {
@@ -444,7 +432,7 @@ class Post_Model extends ORM
             {//-- Revitalise deleted tag
                 $tag->is_deleted = 0;
                 $tag->post_count = 1;
-                $tag->date_modified = date('Y-m-d H:i:s', time());
+                $tag->date_modified = date::timestamp();
                 $tag->modified_by = 'post::create_question';
                 try
                 {
@@ -458,7 +446,7 @@ class Post_Model extends ORM
             else
             {//-- Increment Tag count
                 $tag->post_count += 1;
-                $tag->date_modified = date('Y-m-d H:i:s', time());
+                $tag->date_modified = date::timestamp();
                 $tag->modified_by = 'post::create_question';
                 try
                 {
@@ -486,7 +474,7 @@ class Post_Model extends ORM
         {
             //-- Increase User's Question Count
             $user->question_count += 1;
-            $user->date_modified = date('Y-m-d H:i:s', time());
+            $user->date_modified = date::timestamp();
             $user->modified_by = 'post::create_question';
             $user->save();
 
@@ -530,17 +518,16 @@ class Post_Model extends ORM
 
         //-- Increase Up Vote Count
         $post->up_vote_count   += 1;
-        $post->date_modified    = date('Y-m-d H:i:s', time());
+        $post->date_modified    = date::timestamp();
         $post->modified_by      = 'post::vote_up';
         $post->save();
 
         //-- Increment Author's Score
         $reputation_score   = 10;
-        $user_model         = ORM::factory('user');
-        $user_model->adjust_reputation($post->user_id, $reputation_score);
+        ORM::factory('user')->adjust_reputation($post->user_id, $reputation_score);
 
         //-- Increment Caster's Cast Count
-        $user_model->increment_up_vote_casted($user->id);
+        ORM::factory('user')->increment_up_vote_casted($user->id);
 
         //-- Log activity
         $activity->log($user->id, $action_key, 'post', $post_id);
@@ -579,17 +566,16 @@ class Post_Model extends ORM
 
         //-- Increase Down Vote Count
         $post->down_vote_count += 1;
-        $post->date_modified    = date('Y-m-d H:i:s', time());
+        $post->date_modified    = date::timestamp();
         $post->modified_by      = 'post::vote_down';
         $post->save();
 
         //-- Increment Author's Score
         $reputation_score   = -2;
-        $user_model         = ORM::factory('user');
-        $user_model->adjust_reputation($post->user_id, $reputation_score);
+        ORM::factory('user')->adjust_reputation($post->user_id, $reputation_score);
 
         //-- Increment Caster's Cast Count
-        $user_model->increment_down_vote_casted($user->id);
+        ORM::factory('user')->increment_down_vote_casted($user->id);
 
         //-- Log activity
         $activity->log($user->id, $action_key, 'post', $post_id);
@@ -628,5 +614,25 @@ class Post_Model extends ORM
         //-- Log activity
         $activity->log($user->id, 'bookmark', 'post', $question_id);
     }
+
+    /**
+     * Check if a Question Already has an Accepted Answer
+     *
+     * @param int $question_id
+     * @return bool
+     * @static
+     */
+     public function has_accepted_answer($question_id)
+     {
+        //-- Attempt to find Answers
+        $count = $this
+            ->where('is_deleted', 0)
+            ->where('parent_id', $question_id)
+            ->where('type', 'answer')
+            ->where('status', 'accepted')
+            ->count_all();
+
+        return ($count > 0) ? true : false;
+     }
 
 }//END class

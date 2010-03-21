@@ -37,8 +37,8 @@ class Tags_User_Model extends ORM
         //--NOTE: Disregard of deleted Answers as the tag involvement still count
         $answers = ORM::Factory('post')
             ->where('user_id', $user_id)
-            ->where('post_parent_id', $question_id)
-            ->where('post_type', 'answer')
+            ->where('parent_id', $question_id)
+            ->where('type', 'answer')
             ->where(array('id !=' => $answer_id))
             ->find_all();
         if(count($answers) > 0)

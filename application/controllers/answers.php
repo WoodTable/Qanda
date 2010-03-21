@@ -63,7 +63,6 @@ class Answers_Controller extends Website_Controller
         }
     }
 
-
     /**
      * Up Vote an Answer
      *
@@ -72,17 +71,14 @@ class Answers_Controller extends Website_Controller
      */
     public function vote_up($answer_id)
     {
-        //-- Local Variables
-        $post_model = ORM::factory('post');
-
         try
         {
             //-- Initialise Model
-            $post_model->vote_up($answer_id);
+            ORM::factory('post')->vote_up($answer_id);
 
             //-- Redirect
             $answer     = ORM::factory('post', $answer_id);
-            $question   = ORM::factory('post', $answer->post_parent_id);
+            $question   = ORM::factory('post', $answer->parent_id);
             url::redirect('/questions/detail/'.$question->id.'/'.$question->slug.'#'.$answer_id);
         }
         catch(Exception $ex)
@@ -92,7 +88,6 @@ class Answers_Controller extends Website_Controller
         }
     }
 
-
     /**
      * Down Vote an Answer
      *
@@ -101,17 +96,14 @@ class Answers_Controller extends Website_Controller
      */
     public function vote_down($answer_id)
     {
-        //-- Local Variables
-        $post_model = ORM::factory('post');
-
         try
         {
             //-- Initialise Model
-            $post_model->vote_down($answer_id);
+            ORM::factory('post')->vote_down($answer_id);
 
             //-- Redirect
             $answer     = ORM::factory('post', $answer_id);
-            $question   = ORM::factory('post', $answer->post_parent_id);
+            $question   = ORM::factory('post', $answer->parent_id);
             url::redirect('/questions/detail/'.$question->id.'/'.$question->slug.'#'.$answer_id);
         }
         catch(Exception $ex)
@@ -119,6 +111,82 @@ class Answers_Controller extends Website_Controller
             $message = 'Cannot vote up answer '.$answer_id.'. Caught exception: '.$ex->getMessage();
             throw new Kohana_User_Exception('Fail to Vote Up', $message);
         }
+    }
+
+    /**
+     * Accept an Existing Answer
+     *
+     * @param int $answer_id
+     * @uses Post_Model::has_accepted_answer()
+     * @uses User_Model::adjust_reputation()
+     * @uses Activity_Model::log()
+     */
+    public function accept($answer_id)
+    {
+        //-- Validate Answer
+        $answer = ORM::factory('post', $answer_id);
+        if($answer->id == 0)
+        {
+            throw new Kohana_User_Exception('Cannot Find Answer', 'Cannot find answer ID: '.$answer_id);
+        }
+
+        //-- Validate Question
+        $question = ORM::factory('post', $answer->parent_id);
+        if($question->id == 0)
+        {
+            throw new Kohana_User_Exception('Question Does not Exist', 'Cannot find the Question to answer ID: '.$answer_id);
+        }
+
+        //-- Validate Logged In User
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $user = $authentic->get_user();
+        }
+        else
+        {
+            throw new Kohana_User_Exception('Authentication Required', 'You are required to login before accept an answer.');
+        }
+        
+        //-- Authenticate Current User, make sure current user is same as Question author
+        if($user->id != $question->user_id)
+        {
+            throw new Kohana_User_Exception('Authentication Failed', 'You can only accept answer if it is your question.');
+        }
+        
+        //-- Verify no Answers has been Previously Accepted
+        $has_accepted_answer = ORM::factory('post')->has_accepted_answer($question->id);
+        if($has_accepted_answer == true)
+        {
+            throw new Kohana_User_Exception('Already has Accepted Answer', 'You Already has Accepted Answer for Question ID: '.$question->id);
+        }
+
+        //-- Set Answer as accepted
+        $answer->status         = 'accepted';
+        $answer->date_modified  = date::timestamp();
+        $answer->modified_by    = 'answers::accept';
+        $answer->save();
+
+        //-- Update Question Status (to 'answer-accepted')
+        $question->status           = 'answered';
+        $question->date_modified    = date::timestamp();
+        $question->modified_by      = 'answers::accept';
+        $question->save();
+
+        //-- Update User's Last Activity
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = client::ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->save();
+        
+        //-- Update Answer Author's Reputation
+        ORM::factory('user')->adjust_reputation($answer->user_id, 5);
+        
+        //-- Log Question Acceptance Activity (for Question Author)
+        ORM::factory('activity')->log($question->user_id, 'answer-accepted', 'question', $question->id);
+        
+        //-- Redirect
+        url::redirect('/questions/detail/'.$question->id.'/'.$question->slug.'#'.$answer->id);
     }
 
     //----------------------- PLACE HOLDERS --------------------------//
