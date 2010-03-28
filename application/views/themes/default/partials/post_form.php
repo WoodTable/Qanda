@@ -3,7 +3,7 @@
                 <?php echo form::open($submit_uri, array('class'=>$form_class.' post_form', 'method'=>$form_method)); ?>
 
                     <?php echo form::hidden('timestamp', time()); ?>
-                    <?php echo form::hidden('question_id', $question_id); ?>
+                    <?php echo form::hidden('target_post_id', $target_post_id); ?>
 
                     <?php if($enable_post_title == TRUE): ?>
                         <?php echo form::label('post_title', 'Title:', 'class="post_title"'); ?>

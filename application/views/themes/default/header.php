@@ -34,7 +34,7 @@
 
             <div class="search-engine">
                 <?php echo form::open('questions/search', array('class'=>'search_form', 'method'=>'post')); ?>
-                    <?php echo form::label('search', 'Search:'); ?>
+                    <?php echo form::label('query', 'Search:'); ?>
                     <?php echo form::input('query', ''); ?>
                     <?php echo form::submit('submit-search', 'Search'); ?>
                 <?php echo form::close(); ?>

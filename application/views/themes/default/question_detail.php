@@ -70,11 +70,38 @@
                             | <span><?php echo html::anchor('#', 'flag'); ?></span>
                         </div>
                         */ ?>
-
+                        
+                        <div class="add-comment">
+                            <span><?php echo html::anchor('comments/create/question/'.$question->id, 'Add comment'); ?></span>
+                        </div>
                     </div><?php /* END .detail */ ?>
 
-                    <?php /* TODO: Question Comments */ ?>
                     
+                    <?php $question->load_comments(); ?>
+                    <?php if(count($question->comments) > 0): ?>
+                    <div class="comments">
+                        <?php foreach($question->comments as $index => $comment): ?>
+                        <div class="comment clearfix">
+                            <div class="comment-panel">
+                                <span class="score">[<?php echo $comment->up_vote_count - $comment->down_vote_count; ?>]</span>
+                                <span class="up-vote"><?php echo html::anchor('comments/vote_down/'.$comment->id, '[V]'); ?></span>
+                                <span class="flag"><?php echo html::anchor('comments/flag/'.$comment->id, '[F]'); ?></span>
+                            </div>
+                            <div class="content">
+                                <span class="blurb"><?php echo $comment->content; ?></span>
+                                <span class="signature">
+                                    - by
+                                    <a href="<?php echo url::site('users/detail/'.$comment->user->username); ?>">
+                                        <?php echo $comment->user->display_name; ?>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div><?php /* END .comments */ ?>
+                    <?php endif; ?>
+
+
                 </div><?php /* END .post-detail */ ?>
 
 
@@ -128,13 +155,41 @@
                                     | <span><?php echo html::anchor('#', 'flag'); ?></span>
                                 </div>
                                 */ ?>
-                                
+
+                                <div class="add-comment">
+                                    <span><?php echo html::anchor('comments/create/answer/'.$answer->id, 'Add comment'); ?></span>
+                                </div>
+
+                                <?php $answer->load_comments(); ?>
+                                <?php if(count($answer->comments) > 0): ?>
+                                <div class="comments">
+                                    <?php foreach($answer->comments as $index => $comment): ?>
+                                    <div class="comment clearfix">
+                                        <div class="comment-panel">
+                                            <span class="score">[<?php echo $comment->up_vote_count - $comment->down_vote_count; ?>]</span>
+                                            <span class="up-vote"><?php echo html::anchor('comments/vote_down/'.$comment->id, '[V]'); ?></span>
+                                            <span class="flag"><?php echo html::anchor('comments/flag/'.$comment->id, '[F]'); ?></span>
+                                        </div>
+                                        <div class="content">
+                                            <span class="blurb"><?php echo $comment->content; ?></span>
+                                            <span class="signature">
+                                                - by
+                                                <a href="<?php echo url::site('users/detail/'.$comment->user->username); ?>">
+                                                    <?php echo $comment->user->display_name; ?>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div><?php /* END .comments */ ?>
+                                <?php endif; ?>
+
+
+
+
+
                             </div><?php /* END .detail */ ?>
-
-                            <?php /* TODO: Question Comments */ ?>
-
                         </div><?php /* END .post-detail */ ?>
-
                     <?php endforeach; ?>
 
 
@@ -166,10 +221,10 @@
                     $form->submit_uri           = 'answers/create';
                     $form->form_class           = 'answer-question';
                     $form->form_method          = 'post';
-                    $form->question_id          = $question->id;
+                    $form->target_post_id          = $question->id;
                     $form->enable_post_title    = FALSE;
                     $form->enable_post_tags     = FALSE;
-                    $form->submit_label         = 'Post Answer';
+                    $form->submit_label         = 'Post Comment';
                     $form->render(TRUE);
                 ?>
 

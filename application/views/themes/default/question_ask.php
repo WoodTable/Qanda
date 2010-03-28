@@ -21,7 +21,7 @@
                     $form->submit_uri           = NULL;
                     $form->form_class           = 'ask-question';
                     $form->form_method          = 'post';
-                    $form->question_id          = 0;
+                    $form->target_post_id       = 0;
                     $form->enable_post_title    = TRUE;
                     $form->enable_post_tags     = TRUE;
                     $form->submit_label         = 'Post Question';

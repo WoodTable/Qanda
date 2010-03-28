@@ -19,6 +19,8 @@ class Post_Model extends ORM
     protected $belongs_to = array('user');
     protected $has_and_belongs_to_many = array('tags');
 
+    public $comments = array();
+    
     /**
      * List of Active Questions
      *
@@ -228,8 +230,8 @@ class Post_Model extends ORM
     public function create_answer($post)
     {
         //-- Local Variables
-        $body = $post->post_body;
-        $question_id = $post->question_id;
+        $body           = $post->post_body;
+        $question_id    = $post->target_post_id; //***travo20100327: Used to be: $post->question_id
 
         //-- Sanitize
         if($body == '')
@@ -328,9 +330,9 @@ class Post_Model extends ORM
     public function create_question($post)
     {
         //-- Local Variables
-        $title = $post->post_title;
-        $body = $post->post_body;
-        $tags_string = $post->post_tags;
+        $title          = $post->post_title;
+        $body           = $post->post_body;
+        $tags_string    = $post->post_tags;
         
 
         //-- Sanitize
@@ -485,6 +487,89 @@ class Post_Model extends ORM
             throw new Exception('Failed to save question.');
     }
 
+
+    /**
+     * Create a Comment to Specified Question/Answer
+     *
+     * @param Validation_Object $post
+     * @static
+     */
+    public function create_comment($post)
+    {
+        //-- Local Variables
+        $body           = $post->post_body;
+        $post_parent_id    = $post->target_post_id;
+
+        //-- Sanitize
+        if($body == '')
+            throw new Exception('Body field is required');
+        if($post_parent_id == 0 || $post_parent_id == '')
+            throw new Exception('Parent Post ID is not provided');
+
+        //TODO: Break this to a seperate concern
+        //-- Check Authentication
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {//-- Find Current User ID
+            //TODO: Try catch this
+            $user = $authentic->get_user();
+        }
+        else
+        {//TODO: Guest user management should be a seperate concern
+
+            //TODO: Check permission for answering this question
+
+
+            //TODO: Check if Existing Guest already in Database
+
+
+            //-- Register as Guest
+            $user               = ORM::factory('user');
+            $user->display_name = $post->display_name;
+            //$user->username     = 'guest-'.strtolower(text::random('alnum', 4)); //TODO: Use helper to generate guest account name
+            $user->username     = url::title($user->display_name).'-'.strtolower(text::random('alnum', 4));
+            $user->password     = $user->username;
+            $user->email        = $post->email;
+            //TODO: last activity date
+            //TODO: last ip address
+            //TODO: last user agent
+            //TODO: question count
+            $user->date_created = date::timestamp();
+            $user->created_by   = 'post::create_question';
+            $user->add(ORM::factory('role', 'guest'));
+            try
+            {
+                $user->save();
+            }
+            catch (Exception $ex)
+            {
+                throw new Exception('Failed to create guest user account. Caught exception: '.$ex->getMessage());
+            }
+        }
+
+        //-- Save Comment
+        $comment                = ORM::factory('post');
+        $comment->user_id       = $user->id;
+        $comment->parent_id     = $post_parent_id;
+        $comment->content       = $body;
+        $comment->type          = 'comment';
+        $comment->date_created  = date::timestamp();
+        $comment->created_by    = 'post::create_comment';
+        //TODO: Needs to handle exception
+        $success                = $comment->save();
+
+        if($success == TRUE)
+        {
+            //-- Add User activity
+            ORM::factory('activity')->log($user->id, 'create', 'post', $comment->id);
+            
+            //-- Output
+            return $comment->id;
+        }
+        else
+            throw new Exception('Failed to save answer.');
+    }
+
     /**
      * Cast a Up Vote to a Question or Answer
      *
@@ -635,4 +720,18 @@ class Post_Model extends ORM
         return ($count > 0) ? true : false;
      }
 
+    /**
+     * Populate Comments for Current Post
+     *
+     */
+     public function load_comments()
+     {
+         $this->comments = $this
+            ->where('is_deleted', 0)
+            ->where('parent_id', $this->id)
+            ->where('type', 'comment')
+            ->find_all();
+     }
+
+     
 }//END class

@@ -1,6 +1,6 @@
 h1. Qanda
 
-Version: 0.1.4
+Version: 0.1.5
 Author: Travis Lin <travis[at]travaganza[dot]com[dot]au>
 
 
@@ -13,9 +13,25 @@ Qanda is currently under alpha mode development, enthusiast developers are welco
 
 
 
+h2. Design Goal
+
+The aim for 1.0 release is to demostrate Q&A platform at its minimum: that is, the simpliest form.
+
+Fundamental goal of Qanda 1.0 is to achieve the following:
+
+* Ask Question
+* Answer Question
+* Comment on Question and Answer
+* Accept Answer
+* Vote on Question and Answer
+
+Qanda is designed with forwarding thinking, features that are not part of fundamental are encouraged to be extended as application addons. That include theme switcher, social extensions like badges, follows and widgets like suggestions, tag clouds.
+
+
+
 h2. Basic Requirement
 
-* Http Server with Unicode support
+* Http Server with Unicode support such as Apache
 * PHP version 5.2.3 or above
 * MySQL 5.1 or above
 
@@ -25,14 +41,9 @@ Master project is developing under Apache 2.2.11, PHP 5.3.0 and MySQL 5.1.36.
 
 h2. Install
 
-* Setup table schema by import <code>MYSQL_TABLE_SCHEMAS.sql</code> file.
-* Populate tables by import <code>MYSQL_SAMPLE_RECORDS.sql</code> file.
+* Setup database table schema by import from <code>MYSQL_TABLE_SCHEMAS.sql</code> file.
+* Populate database tables by import from <code>MYSQL_SAMPLE_RECORDS.sql</code> file.
 * Copy the folder to designated directory
-
-
-
-h2. Configuration
-
 * Update <code>RewriteBase</code> in <code>.htaccess</code> file to reflect to your folder structure
 * Update database connection values in <code>application/config/database.php</code> file.
 
@@ -40,7 +51,20 @@ h2. Configuration
 
 h2. Changelog
 
-Currently under pre-alpha mode (known as experimental mode) and changes are currently too fine to be recorded in changelog. This section will be populated once 1.0-beta is in place.
+We are currently under experimental phase and changes are volatile, there is no point recording a changelog just yet. This section will become populated once 1.0-beta is in place.
+
+
+
+h2. Submitting Bugs
+
+Please use "GitHub Issues Manager":http://github.com/qanda/Qanda/issues to report all bugs or feature requests.
+
+
+
+h2. Demo Site
+
+Demo site is unavailable during experimental phase. Once we have the bread and butter, we'll get the demo site setup right away.
+
 
 
 ****************************************************************************

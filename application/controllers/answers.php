@@ -42,7 +42,7 @@ class Answers_Controller extends Website_Controller
                 $answer_id  = ORM::factory('post')->create_answer($post);
 
                 //TODO: This should be in a different try-catch block
-                $question   = ORM::factory('post', $post->question_id);
+                $question   = ORM::factory('post', $post->target_post_id); //***travo20100327: Used to be: $post->question_id
                 
                 //-- Redirect
                 //-- NOTE: You will require to redirect, otherwise submission will be trigger again upon page refresh
