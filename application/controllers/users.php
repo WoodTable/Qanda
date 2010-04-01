@@ -32,6 +32,7 @@ class Users_Controller extends Website_Controller
      */
     public function browse()
     {
+        //TODO: Error handling
         //TODO: Cater pagination
         //-- Model
         $users = ORM::factory('user')->list_all_users();
@@ -81,36 +82,32 @@ class Users_Controller extends Website_Controller
         if(Auth::instance()->logged_in())
         {//-- Already logged in as someone
             //TODO: Display 'Already Logged In' Error Page
-            $this->template->content = "You have already logged in.";
+            throw new Kohana_User_Exception('Already Logged In.', 'You have already logged in to the website');
         }
         elseif($_POST)
         {//-- Detect a Post Back
             $post = Validation::factory($_POST);
 
+            //-- Attemp to Login
             try
-            {//-- Attemp to Login
+            {
                 ORM::factory('user')->authenticate($post);
-
-                //-- Login Success, Redirect
-                if(isset($post->redirect_url))
-                {
-                    url::redirect($post->redirect_url);
-                }
-                else
-                {
-                    url::redirect('/');
-                }
             }
             catch(Exception $ex)
-            {//-- Throw an Error Message
+            {
                 //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
-                $message = 'Cannot login. Caught exception: '.$ex->getMessage();
-                throw new Kohana_User_Exception('Fail to Login.', $message);
+                throw new Kohana_User_Exception('Fail to Login.', 'Cannot login. Caught exception: '.$ex->getMessage());
             }
+
+            //-- Login Success, Redirect
+            if(isset($post->redirect_url))
+                url::redirect($post->redirect_url);
+            else
+                url::redirect('/');
         }
         else
-        {//-- Show Login Form
-            //-- Render View
+        {
+            //-- Show Login Form
             $this->template->content = View::factory('themes/default/user_login');
         }
     }
@@ -136,14 +133,6 @@ class Users_Controller extends Website_Controller
     }
 
     /**
-     * Edit an Existing User
-     */
-    public function edit($user_id)
-    {
-        //TODO: Implement Edit User
-    }
-
-    /**
      * Register as a new User
      */
     public function register()
@@ -152,7 +141,7 @@ class Users_Controller extends Website_Controller
         if(Auth::instance()->logged_in())
         {//-- Display 'Already Logged In' message
             //TODO: Display proper 'Already Logged In' page and provide link to log out
-            $this->template->content = "You have already logged in.";
+            throw new Kohana_User_Exception('Already Logged In.', 'You have already logged in to the website');
         }
         elseif($_POST)
         {//-- Detects a Post Back
@@ -162,34 +151,36 @@ class Users_Controller extends Website_Controller
             try
             {
                 $user_id    = ORM::factory('user')->create($post);
-                $user       = ORM::factory('user', $user_id);
-
-                //-- Login using the collected data
-                Auth::instance()->login($user->username, $post->password);
-
-                //-- Redirect
-                url::redirect('/users/detail/'.$user->username);
             }
             catch(Exception $ex)
-            {//-- Throw an Error Message
+            {
                 //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
-                $message = 'Cannot create user. Caught exception: '.$ex->getMessage();
-                throw new Kohana_User_Exception('Fail to Create User.', $message);
+                throw new Kohana_User_Exception('Fail to Create User.', 'Cannot create user. Caught exception: '.$ex->getMessage());
             }
+
+            //-- Load this User
+            $user = ORM::factory('user', $user_id);
+
+            //-- Login using the collected data
+            Auth::instance()->login($user->username, $post->password);
+
+            //-- Redirect
+            url::redirect('/users/detail/'.$user->username);
         }
         else
-        {//-- Display User Registration Form
-            //-- Render View
+        {
+            //-- Display User Registration Form
             $this->template->content = View::factory('themes/default/user_register');
         }
     }
+    
+    //----------------------- PLACE HOLDERS --------------------------//
 
     /**
-     * List Users Owns Specified Badge
+     * Edit an Existing User
      */
-    public function badged($badge_id, $badge_slug)
+    public function edit($user_id)
     {
-        //TODO: Implement this method
         $this->template->content = "Method Not Implemented Yet.";
     }
 

@@ -26,36 +26,32 @@ class Tags_Controller extends Website_Controller
     }
 
     /**
-     * Default Landing Action
-     */
-    public function index()
-    {
-        //-- Reroute
-        $this->show();
-    }
-
-    /**
      * Show a List of Tags
+     * 
+     * @param string $filler
+     * @param int $page_number
+     * @param string $order_by
+     * @param int $page_size
+     * @uses Tag_Model::get_active_tags()
      */
-    public function show($current_page=1, $page_count=10, $sort_by="popular")
+    public function browse($filler='page', $page_number=1, $order_by='active', $page_size=25)
     {
-        //-- Model
-        $tags = ORM::factory('tag');
-        $tags = $tags->orderby('post_count', 'desc')
-            ->where('is_deleted', 0)
-            ->find_all();
+        //TODO: Error handling
+        $tags = ORM::factory('tag')->get_active_tags($page_number, $page_size);
 
         //-- Render View
         $this->template->content = View::factory('themes/default/tag_list')
             ->bind('tags', $tags);
     }
+    
+    //----------------------- PLACE HOLDERS --------------------------//
 
     /**
      * Edit an Existing Tag
      */
     public function edit($tag_id)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
     /**
@@ -66,7 +62,7 @@ class Tags_Controller extends Website_Controller
      */
     public function merge($unwanted_tag_id, $merge_tag_id)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
 }//END class

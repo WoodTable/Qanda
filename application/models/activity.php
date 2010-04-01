@@ -16,7 +16,11 @@
  */
 class Activity_Model extends ORM
 {
-    //protected $belongs_to = array('user');
+
+    //----------------------- PUBLIC METHODS --------------------------//
+
+    //----------------------- STATIC METHODS --------------------------//
+
 
     /**
      * Log an User Action
@@ -88,5 +92,7 @@ class Activity_Model extends ORM
         else
             return true;
     }
+
+    //----------------------- PRIVATE METHODS --------------------------//
 
 }//END class

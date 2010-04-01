@@ -18,12 +18,17 @@ class Tags_User_Model extends ORM
 {
     protected $belongs_to = array('user', 'tag');
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
+    //----------------------- STATIC METHODS --------------------------//
+
     /**
      * Set Tag Involvement to an Answer
      *
      * @param int $user_id
      * @param int $question_id
      * @param int $answer_id
+     * @static
      */
     public function tag_answer($user_id, $question_id, $answer_id)
     {
@@ -50,5 +55,7 @@ class Tags_User_Model extends ORM
             ORM::factory('tag')->set_user_involvement($tag->id, $user_id);
         }
     }
+
+    //----------------------- PRIVATE METHODS --------------------------//
 
 }//END class

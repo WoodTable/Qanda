@@ -19,8 +19,60 @@ class Post_Model extends ORM
     protected $belongs_to = array('user');
     protected $has_and_belongs_to_many = array('tags');
 
+    public $answers = array();
     public $comments = array();
     
+    //----------------------- PUBLIC METHODS --------------------------//
+
+    /**
+     * Populate Answers for Current Question
+     */
+     public function load_answers()
+     {
+         $this->answers = $this
+            ->where('is_deleted', 0)
+            ->where('parent_id', $this->id)
+            ->where('type', 'answer')
+            ->orderby('last_activity_date', 'desc')
+            ->orderby('date_created', 'desc')
+            ->find_all();
+     }
+
+    /**
+     * Determine Whether There are Answers to this Question
+     *
+     * @return bool
+     */
+     public function have_answers()
+     {
+         return (count($this->answers) > 0) ? true : false;
+     }
+
+    /**
+     * Populate Comments for Current Post
+     */
+     public function load_comments()
+     {
+         $this->comments = $this
+            ->where('is_deleted', 0)
+            ->where('parent_id', $this->id)
+            ->where('type', 'comment')
+            ->orderby('date_created', 'asc')
+            ->find_all();
+     }
+
+    /**
+     * Determine Whether There are Comments to this Post
+     *
+     * @return bool
+     */
+     public function have_comments()
+     {
+         return (count($this->comments) > 0) ? true : false;
+     }
+
+    //----------------------- STATIC METHODS --------------------------//
+
     /**
      * List of Active Questions
      *
@@ -594,11 +646,10 @@ class Post_Model extends ORM
             throw new Exception('Post ID '.$post_id.' not found.');
 
         //-- Initialise Activity Log
-        $activity = ORM::factory('activity');
         $action_key = 'vote_up';
 
         //-- Check Activity Already Exist
-        if($activity->has_log($user->id, $action_key, 'post', $post_id))
+        if(ORM::factory('activity')->has_log($user->id, $action_key, 'post', $post_id))
             throw new Exception('User '.$user->id.' has already '.$action_key.' this post.');
 
         //-- Increase Up Vote Count
@@ -615,7 +666,7 @@ class Post_Model extends ORM
         ORM::factory('user')->increment_up_vote_casted($user->id);
 
         //-- Log activity
-        $activity->log($user->id, $action_key, 'post', $post_id);
+        ORM::factory('activity')->log($user->id, $action_key, 'post', $post_id);
     }
 
     /**
@@ -642,11 +693,10 @@ class Post_Model extends ORM
             throw new Exception('Post ID '.$post_id.' not found.');
 
         //-- Initialise Activity Log
-        $activity = ORM::factory('activity');
         $action_key = 'vote_down';
 
         //-- Check Activity Already Exist
-        if($activity->has_log($user->id, $action_key, 'post', $post_id))
+        if(ORM::factory('activity')->has_log($user->id, $action_key, 'post', $post_id))
             throw new Exception('User '.$user->id.' has already '.$action_key.' this post.');
 
         //-- Increase Down Vote Count
@@ -663,7 +713,7 @@ class Post_Model extends ORM
         ORM::factory('user')->increment_down_vote_casted($user->id);
 
         //-- Log activity
-        $activity->log($user->id, $action_key, 'post', $post_id);
+        ORM::factory('activity')->log($user->id, $action_key, 'post', $post_id);
     }
 
     /**
@@ -689,15 +739,84 @@ class Post_Model extends ORM
         if($question->id == 0)
             throw new Exception('Question ID '.$question_id.' not found.');
 
-        //-- Initialise Activity Log
-        $activity = ORM::factory('activity');
-
         //-- Check Activity Already Exist
-        if($activity->has_log($user->id, 'bookmark', 'post', $question_id))
+        if(ORM::factory('activity')->has_log($user->id, 'bookmark', 'post', $question_id))
             throw new Exception('User '.$user->id.' has already bookmark this question.');
 
         //-- Log activity
-        $activity->log($user->id, 'bookmark', 'post', $question_id);
+        ORM::factory('activity')->log($user->id, 'bookmark', 'post', $question_id);
+    }
+
+    /**
+     * Accept Specified Answer
+     *
+     * @param int $answer_id
+     * @static
+     */
+    public function accept_answer($answer_id)
+    {
+        //-- Validate Answer
+        $answer = ORM::factory('post', $answer_id);
+        if($answer->id == 0)
+        {
+            throw new Exception('Failed validating answer. Cannot find answer ID: '.$answer_id);
+        }
+
+        //-- Validate Question
+        $question = ORM::factory('post', $answer->parent_id);
+        if($question->id == 0)
+        {
+            throw new Exception('Failed validating question. Cannot find the Question to answer ID: '.$answer_id);
+        }
+
+        //-- Validate Logged In User
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $user = $authentic->get_user();
+        }
+        else
+        {
+            throw new Exception('You are required to login before accept an answer.');
+        }
+
+        //-- Authenticate Current User, make sure current user is same as Question author
+        if($user->id != $question->user_id)
+        {
+            throw new Exception('Authentication Failed. You can only accept answer if it is your question.');
+        }
+
+        //-- Verify no Answers has been Previously Accepted
+        $has_accepted_answer = ORM::factory('post')->has_accepted_answer($question->id);
+        if($has_accepted_answer == true)
+        {
+            throw new Kohana_User_Exception('Already has Accepted Answer', 'You Already has Accepted Answer for Question ID: '.$question->id);
+        }
+
+        //-- Set Answer as accepted
+        $answer->status         = 'accepted';
+        $answer->date_modified  = date::timestamp();
+        $answer->modified_by    = 'post::accept_answer';
+        $answer->save();
+
+        //-- Update Question Status (to 'answer-accepted')
+        $question->status           = 'answered';
+        $question->date_modified    = date::timestamp();
+        $question->modified_by      = 'post::accept_answer';
+        $question->save();
+
+        //-- Update User's Last Activity
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = client::ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->save();
+
+        //-- Update Answer Author's Reputation
+        $reputation = 5;
+        ORM::factory('user')->adjust_reputation($answer->user_id, $reputation);
+
+        //-- Log Question Acceptance Activity (for Question Author)
+        ORM::factory('activity')->log($question->user_id, 'answer-accepted', 'question', $question->id);
     }
 
     /**
@@ -720,18 +839,6 @@ class Post_Model extends ORM
         return ($count > 0) ? true : false;
      }
 
-    /**
-     * Populate Comments for Current Post
-     *
-     */
-     public function load_comments()
-     {
-         $this->comments = $this
-            ->where('is_deleted', 0)
-            ->where('parent_id', $this->id)
-            ->where('type', 'comment')
-            ->find_all();
-     }
-
+    //----------------------- PRIVATE METHODS --------------------------//
      
 }//END class

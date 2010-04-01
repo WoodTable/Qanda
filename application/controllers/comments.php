@@ -32,64 +32,66 @@ class Comments_Controller extends Website_Controller
      */
     public function create($post_type, $post_id=0)
     {
-        //-- Detect a Post Back
         if($_POST)
-        {
+        {//-- Detect a Post Back
             $post = Validation::factory($_POST);
 
+            //-- Instantiate New Question Model
             try
-            {//-- Instantiate New Question Model
+            {
                 $comment_id     = ORM::factory('post')->create_comment($post);
-                $comment        = ORM::factory('post', $comment_id);
-                
-                if($post_type == 'answer')
-                {
-                    $answer     = ORM::factory('post', $comment->parent_id);
-                    $question   = ORM::factory('post', $answer->parent_id);
-                }
-                elseif($post_type == 'question')
-                {
-                    $question   = ORM::factory('post', $comment->parent_id);
-                }
-                
-                //-- Redirect
-                url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
             }
             catch(Exception $ex)
-            {//-- Throw an Error Message
+            {
                 //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
-                $message = 'Cannot create question. Caught exception: '.$ex->getMessage();
-                throw new Kohana_User_Exception('Fail to Create Question', $message);
+                throw new Kohana_User_Exception('Fail to Create Question', 'Cannot create question. Caught exception: '.$ex->getMessage());
             }
 
-            return; //-- Code Suppose to End Regardless
-        }
-        
-        //-- Obtain models
-        if($post_type == 'question')
-        {
-            //-- Get Question
-            $answer     = null;
-            $question   = ORM::factory('post', $post_id);
-        }
-        elseif($post_type == 'answer')
-        {
-            //-- Get both Question and Answer
-            $answer     = ORM::factory('post', $post_id);
-            $question   = ORM::factory('post', $answer->parent_id);
+            //-- Load this Comment
+            $comment        = ORM::factory('post', $comment_id);
+
+            //-- Load related Models
+            if($post_type == 'answer')
+            {
+                $answer     = ORM::factory('post', $comment->parent_id);
+                $question   = ORM::factory('post', $answer->parent_id);
+            }
+            elseif($post_type == 'question')
+            {
+                $question   = ORM::factory('post', $comment->parent_id);
+            }
+
+            //-- Redirect
+            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
         }
         else
-        {
-            //-- Nothing
+        {//-- Landing, Show Comment Form
+            //-- Obtain models
+            if($post_type == 'question')
+            {
+                //-- Get Question
+                $answer     = null;
+                $question   = ORM::factory('post', $post_id);
+            }
+            elseif($post_type == 'answer')
+            {
+                //-- Get both Question and Answer
+                $answer     = ORM::factory('post', $post_id);
+                $question   = ORM::factory('post', $answer->parent_id);
+            }
+            else
+            {
+                //-- Nothing
+            }
+
+            //-- Render View
+            $this->template->content = View::factory('themes/default/comment_create')
+                ->bind('answer', $answer)
+                ->bind('question', $question)
+                ->bind('post_type', $post_type)
+                ->bind('target_post_id', $post_id)
+                ;
         }
-        
-        //-- Render View
-        $this->template->content = View::factory('themes/default/comment_create')
-            ->bind('answer', $answer)
-            ->bind('question', $question)
-            ->bind('post_type', $post_type)
-            ->bind('target_post_id', $post_id)
-            ;
     }
 
     //----------------------- PLACE HOLDERS --------------------------//
@@ -99,7 +101,7 @@ class Comments_Controller extends Website_Controller
      */
     public function show($post_id)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
     /**
@@ -107,7 +109,7 @@ class Comments_Controller extends Website_Controller
      */
     public function edit($comment_id)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
     /**
@@ -115,7 +117,7 @@ class Comments_Controller extends Website_Controller
      */
     public function delete($comment_id)
     {
-        //TODO: Implement this method
+        $this->template->content = "Method Not Implemented Yet.";
     }
 
 }//END class

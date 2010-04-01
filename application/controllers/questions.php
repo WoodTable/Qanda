@@ -111,31 +111,32 @@ class Questions_Controller extends Website_Controller
      */
     public function create()
     {
-        //-- Detect a Post Back
         if($_POST)
-        {
+        {//-- Detect a Post Back
+            //TODO: Validate user input
             $post = Validation::factory($_POST);
 
+            //-- Create a New Question
             try
-            {//-- Instantiate New Question Model
-                $question_id    = ORM::factory('post')->create_question($post);
-                $question       = ORM::factory('post', $question_id);
-
-                //-- Redirect
-                url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
+            {
+                $question_id = ORM::factory('post')->create_question($post);
             }
             catch(Exception $ex)
-            {//-- Throw an Error Message
-                //TODO: Instead of throw Kohana Error page, redirect back to this method with error message displayed.
-                $message = 'Cannot create question. Caught exception: '.$ex->getMessage();
-                throw new Kohana_User_Exception('Fail to Create Question', $message);
+            {
+                throw new Kohana_User_Exception('Fail to Create Question', 'Cannot create question. Caught exception: '.$ex->getMessage());
             }
 
-            return; //-- Code Suppose to End Regardless
+            //-- Fetch the newly Created Question
+            $question = ORM::factory('post', $question_id);
+            
+            //-- Redirect
+            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
         }
-
-        //-- Render View
-        $this->template->content = View::factory('themes/default/question_ask');
+        else
+        {
+            //-- Direct Connection to Action Without a Post Back
+            $this->template->content = View::factory('themes/default/question_ask');
+        }
     }
     
     /**
@@ -146,20 +147,21 @@ class Questions_Controller extends Website_Controller
      */
     public function vote_up($question_id)
     {
+        //-- Perform Vote Up
         try
         {
-            //-- Initialise Model
             ORM::factory('post')->vote_up($question_id);
-
-            //-- Redirect
-            $question = ORM::factory('post', $question_id);
-            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
         }
         catch(Exception $ex)
         {
-            $message = 'Cannot vote up question ID: '.$question_id.'. Caught exception: '.$ex->getMessage();
-            throw new Kohana_User_Exception('Fail to Vote Up', $message);
+            throw new Kohana_User_Exception('Fail to Vote Up', 'Cannot vote up question ID: '.$question_id.'. Caught exception: '.$ex->getMessage());
         }
+
+        //-- Fetch Original Question
+        $question = ORM::factory('post', $question_id);
+
+        //-- Redirect
+        url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
     }
 
     /**
@@ -170,20 +172,21 @@ class Questions_Controller extends Website_Controller
      */
     public function vote_down($question_id)
     {
+        //-- Perform Vote Down
         try
         {
-            //-- Initialise Model
             ORM::factory('post')->vote_down($question_id);
-
-            //-- Redirect
-            $question = ORM::factory('post', $question_id);
-            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
         }
         catch(Exception $ex)
         {
-            $message = 'Cannot vote down question ID: '.$question_id.'. Caught exception: '.$ex->getMessage();
-            throw new Kohana_User_Exception('Fail to Vote Down', $message);
+            throw new Kohana_User_Exception('Fail to Vote Down', 'Cannot vote down question ID: '.$question_id.'. Caught exception: '.$ex->getMessage());
         }
+        
+        //-- Fetch Original Question
+        $question = ORM::factory('post', $question_id);
+
+        //-- Redirect
+        url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
     }
 
     /**
@@ -194,20 +197,21 @@ class Questions_Controller extends Website_Controller
      */
     public function bookmark($question_id)
     {
+        //-- Perform Question Bookmark
         try
         {
-            //-- Initialise Model
             ORM::factory('post')->bookmark($question_id);
-
-            //-- Redirect
-            $question = ORM::factory('post', $question_id);
-            url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
         }
         catch(Exception $ex)
         {
-            $message = 'Cannot bookmark question ID: '.$question_id.'. Caught exception: '.$ex->getMessage();
-            throw new Kohana_User_Exception('Fail to Vote Down', $message);
+            throw new Kohana_User_Exception('Fail to Vote Down', 'Cannot bookmark question ID: '.$question_id.'. Caught exception: '.$ex->getMessage());
         }
+
+        //-- Fetch Original Question
+        $question = ORM::factory('post', $question_id);
+
+        //-- Redirect
+        url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
     }
 
     //----------------------- PRIVATE METHODS --------------------------//
@@ -223,6 +227,7 @@ class Questions_Controller extends Website_Controller
      */
     private function browse_active($page_number, $page_size)
     {
+        //TODO: Error catching
         //-- Initialise Model
         $total_items    = ORM::factory('post')->count_all_questions();
         $questions      = ORM::factory('post')->get_active_questions($page_number, $page_size);
@@ -246,6 +251,7 @@ class Questions_Controller extends Website_Controller
      */
     private function browse_unanswered($page_number, $page_size)
     {
+        //TODO: Error catching
         //-- Initialise Model
         $total_items    = ORM::factory('post')->count_unanswered_questions();
         $questions      = ORM::factory('post')->get_unanswered_questions($page_number, $page_size);
@@ -282,7 +288,7 @@ class Questions_Controller extends Website_Controller
      * @param int $question_id
      */
     private function increase_view_count($question_id)
-    {
+    {//TODO: This should belong in Post_Model
         //-- Initialise Model
         $question = ORM::factory('post', $question_id);
 

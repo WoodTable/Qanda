@@ -16,11 +16,15 @@
  */
 class User_Model extends Auth_User_Model
 {
+    //----------------------- PUBLIC METHODS --------------------------//
+
+    //----------------------- STATIC METHODS --------------------------//
 
     /**
      * List All Users
      *
      * @return ORM_Iterator
+     * @static
      */
     public function list_all_users()
     {
@@ -38,6 +42,7 @@ class User_Model extends Auth_User_Model
      *
      * @param string $username
      * @return User_Model
+     * @static
      */
     public function get($username)
     {
@@ -45,6 +50,7 @@ class User_Model extends Auth_User_Model
         $user = $this->where('username', $username)
             ->where('is_deleted', 0)
             ->find();
+        
         //-- Output
         return $user;
     }
@@ -54,6 +60,7 @@ class User_Model extends Auth_User_Model
      *
      * @param Validation_Object $post
      * @return int Id of the newly created user
+     * @static
      */
     public function create($post)
     {
@@ -108,6 +115,7 @@ class User_Model extends Auth_User_Model
      * Authenticate an User
      *
      * @param Validation_Object $post
+     * @static
      */
     public function authenticate($post)
     {
@@ -185,5 +193,7 @@ class User_Model extends Auth_User_Model
         $user->modified_by          = 'user::increment_down_vote_casted';
         $user->save();
     }
+
+    //----------------------- PRIVATE METHODS --------------------------//
 
 }//END class

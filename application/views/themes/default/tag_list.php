@@ -39,7 +39,7 @@
             </div><?php /* END .main-bar */ ?>
 
             
-            <?php View::factory($theme_url.'sidebar')->render(TRUE); ?>
+            <?php View::factory($theme_url.'module_sidebar')->render(TRUE); ?>
 
             <div class="clearfix"></div>
 

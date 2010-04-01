@@ -46,7 +46,7 @@
                 <?php endif; ?>
 
                 <?php
-                    $form                       = View::factory($theme_url.'partials/post_form');
+                    $form                       = View::factory($theme_url.'module_post_form');
                     $form->submit_uri           = 'comments/create/'.$post_type;
                     $form->form_class           = 'comment-post';
                     $form->form_method          = 'post';
@@ -59,7 +59,7 @@
 
             </div><?php /* END #main-bar */ ?>
 
-            <?php View::factory($theme_url.'sidebar')->render(TRUE); ?>
+            <?php View::factory($theme_url.'module_sidebar')->render(TRUE); ?>
 
             <div class="clearfix"></div>
 

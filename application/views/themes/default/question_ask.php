@@ -17,7 +17,7 @@
                 </div>
 
                 <?php 
-                    $form                       = View::factory($theme_url.'partials/post_form');
+                    $form                       = View::factory($theme_url.'module_post_form');
                     $form->submit_uri           = NULL;
                     $form->form_class           = 'ask-question';
                     $form->form_method          = 'post';
@@ -30,7 +30,7 @@
 
             </div>
 
-            <?php View::factory($theme_url.'sidebar')->render(TRUE); ?>
+            <?php View::factory($theme_url.'module_sidebar')->render(TRUE); ?>
 
             <div class="clearfix"></div>
 

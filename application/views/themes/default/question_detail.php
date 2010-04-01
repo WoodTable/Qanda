@@ -56,7 +56,7 @@
                         </ul>
 
                         <?php
-                            $form       = View::factory($theme_url.'partials/user_flair');
+                            $form       = View::factory($theme_url.'module_user_thumbnail');
                             $form->user = $question->user;
                             $form->render(TRUE);
                         ?>
@@ -78,7 +78,7 @@
 
                     
                     <?php $question->load_comments(); ?>
-                    <?php if(count($question->comments) > 0): ?>
+                    <?php if($question->have_comments()): ?>
                     <div class="comments">
                         <?php foreach($question->comments as $index => $comment): ?>
                         <div class="comment clearfix">
@@ -101,10 +101,13 @@
                     </div><?php /* END .comments */ ?>
                     <?php endif; ?>
 
-
                 </div><?php /* END .post-detail */ ?>
 
-
+                <?php /***travo20100328: Not ready yet
+                <?php $question->load_answers(); ?>
+                <?php $answers = $question->answers; ?>
+                */ ?>
+                
                 <div id="answers-to-<?php echo $question->id; ?>" class="answers-list">
 
                     <div class="subheader">
@@ -141,7 +144,7 @@
                                 </div>
 
                                 <?php
-                                    $form       = View::factory($theme_url.'partials/user_flair');
+                                    $form       = View::factory($theme_url.'module_user_thumbnail');
                                     $form->user = $answer->user;
                                     $form->render(TRUE);
                                 ?>
@@ -161,7 +164,7 @@
                                 </div>
 
                                 <?php $answer->load_comments(); ?>
-                                <?php if(count($answer->comments) > 0): ?>
+                                <?php if($answer->have_comments()): ?>
                                 <div class="comments">
                                     <?php foreach($answer->comments as $index => $comment): ?>
                                     <div class="comment clearfix">
@@ -184,14 +187,9 @@
                                 </div><?php /* END .comments */ ?>
                                 <?php endif; ?>
 
-
-
-
-
                             </div><?php /* END .detail */ ?>
                         </div><?php /* END .post-detail */ ?>
                     <?php endforeach; ?>
-
 
                     <?php
                         if($this->pagination->total_pages > 1)
@@ -206,18 +204,12 @@
                         </div>
                     <?php endif; ?>
 
-
                 </div><?php /* END .answers-list */ ?>
-
-
-                
-                <?php /* TODO: Display a message when there's no answers to this question */ ?>
-
 
                 
                 <h2>Answer this Question</h2>
                 <?php
-                    $form                       = View::factory($theme_url.'partials/post_form');
+                    $form                       = View::factory($theme_url.'module_post_form');
                     $form->submit_uri           = 'answers/create';
                     $form->form_class           = 'answer-question';
                     $form->form_method          = 'post';
@@ -231,7 +223,7 @@
 
             </div><?php /* END #main-bar */ ?>
 
-            <?php View::factory($theme_url.'sidebar')->render(TRUE); ?>
+            <?php View::factory($theme_url.'module_sidebar')->render(TRUE); ?>
 
             <div class="clearfix"></div>
 

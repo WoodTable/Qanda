@@ -16,11 +16,12 @@
  */
 class Website_Controller extends Template_Controller
 {
-    //-- Global
+    //-- Global Variables
     public $template = 'themes/default/master'; // In application/views folder
     //public $auto_render = TRUE;               // Not used
     //protected $db;                            // Not used
     //protected $session;                       // Not used
+    protected $settings;
     
     /**
      * Website Controller Constructor
@@ -32,18 +33,33 @@ class Website_Controller extends Template_Controller
         //-- Enable Session on All Pages
         //$this->session = Session::instance(); // Not used
 
+        //-- Load Settings
+        $this->settings = ORM::factory('setting');
+        $this->settings->autoload();
+
         //-- Template Head
         $this->head = Head::instance();
-        $this->head->css->append_file('media/themes/default/css/layout');
-        $this->head->title->set('Qanda Website Title');
+        $this->head->css->append_file('media/themes/'.$this->settings->get('current_theme').'/css/layout');
+        $this->head->title->set($this->settings->get('site_name'));
         $this->template->head = $this->head;
 
         //-- Template Global Variables
-        $this->template->set_global('theme_url', 'themes/default/');
+        $this->template->set_global('theme_url', 'themes/'.$this->settings->get('current_theme').'/');
 	}
 
+    //----------------------- PUBLIC METHODS --------------------------//
 
+    //----------------------- STATIC METHODS --------------------------//
 
+    /**
+     * Create Log Record
+     *
+     * @param string $activity
+     * @param string $object_type
+     * @param int $object_id
+     * @static
+     * @uses Activity_Model::log()
+     */
     protected function log_activity($activity, $object_type, $object_id)
     {
         //-- Log User View Activity
@@ -55,7 +71,6 @@ class Website_Controller extends Template_Controller
         }
     }
 
-
-    
+    //----------------------- PRIVATE METHODS --------------------------//
 
 }//END class

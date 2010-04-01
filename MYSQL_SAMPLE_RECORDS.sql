@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 21, 2010 at 06:06 AM
+-- Generation Time: Apr 01, 2010 at 11:15 AM
 -- Server version: 5.1.36
 -- PHP Version: 5.3.0
 
@@ -28,7 +28,8 @@ INSERT INTO `qa_activities` (`id`, `user_id`, `action_key`, `object_type`, `obje
 (8, 3, 'create', 'post', 9, 'user 3 create post 9', '2010-02-28 12:58:10', 'activity::track', '0000-00-00 00:00:00', '', 0),
 (9, 4, 'create', 'post', 10, 'user 4 create post 10', '2010-02-28 12:59:19', 'activity::track', '0000-00-00 00:00:00', '', 0),
 (10, 6, 'view', 'post', 11, 'user 6 view post 11', '2010-03-21 06:06:08', 'activity::log', '0000-00-00 00:00:00', '', 0),
-(11, 6, 'create', 'post', 12, 'user 6 create post 12', '2010-03-21 06:06:19', 'activity::log', '0000-00-00 00:00:00', '', 0);
+(11, 6, 'create', 'post', 12, 'user 6 create post 12', '2010-03-21 06:06:19', 'activity::log', '0000-00-00 00:00:00', '', 0),
+(12, 7, 'create', 'post', 13, 'user 7 create post 13', '2010-04-01 11:15:13', 'activity::log', '0000-00-00 00:00:00', '', 0);
 
 --
 -- Dumping data for table `qa_posts`
@@ -45,8 +46,9 @@ INSERT INTO `qa_posts` (`id`, `user_id`, `title`, `slug`, `content`, `status`, `
 (8, 2, '', '', 'Start by studying programming, game design and game algorithm.. you need a lot of creativity and imagination and also think that how will the game be to the one who plays it and thinks it..', 'publish', 3, 'answer', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-02-28 12:57:03', 'question::detail', '0000-00-00 00:00:00', '', 0),
 (9, 3, '', '', 'what about ketchup?', 'publish', 4, 'answer', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-02-28 12:58:10', 'question::detail', '0000-00-00 00:00:00', '', 0),
 (10, 4, '', '', 'If by "date" you mean the specific outing, then yes, if it is sufficiently special and romantic. Dinner at a great restaurant or a homemade picnic in a romantic location could work. Dinner at your usual place, or ordering pizza, is not special (unless, of course, you do not often get to see one another). \n\nIf by "date" you mean the specific person, then probably not. I''d be pretty put out if a guy thought he was doing me a favor simply by going out with me. Ew. \n\nNow, the "why": if it is a special occasion, like a birthday, anniversary, or V-Day, a certain amount of effort to commemorate the occasion is expected. You go out of your way to make it special. For some people, that might mean getting time off of work so you can actually be together. For others (like deployed soldiers), that might mean getting in a phone call. If you see each other regularly and go out to dinner normally, you should step it up a notch. \n\nIf you''re on a budget, focus on doing something special and romantic. Making a meal from scratch is very sweet. Even a single rose, or a bouquet of pretty flowers is nice. Basically, show them that you care and that your date is worth the effort.\n\nOriginate from: http://au.answers.yahoo.com/question/index?qid=20100212152656AAttLHu', 'publish', 5, 'answer', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-02-28 12:59:19', 'question::detail', '0000-00-00 00:00:00', '', 0),
-(11, 5, 'Is the plastic, HIPS, recyclable?', 'is-the-plastic-hips-recyclable', 'High Impact Polystyrene (HIPS)\n\nOriginate from: http://au.answers.yahoo.com/question/index?qid=20100228040754AAv7AgT', 'publish', 0, 'question', 'normal', 0, 0, 4, 1, 0, 0, '2010-03-21 06:06:19', '2010-02-28 13:01:07', 'post::create_question', '2010-03-21 06:06:19', 'post::create_answer', 0),
-(12, 6, '', '', 'Yes it is.', 'publish', 11, 'answer', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-03-21 06:06:19', 'question::detail', '0000-00-00 00:00:00', '', 0);
+(11, 5, 'Is the plastic, HIPS, recyclable?', 'is-the-plastic-hips-recyclable', 'High Impact Polystyrene (HIPS)\n\nOriginate from: http://au.answers.yahoo.com/question/index?qid=20100228040754AAv7AgT', 'publish', 0, 'question', 'normal', 0, 0, 6, 1, 0, 0, '2010-03-21 06:06:19', '2010-02-28 13:01:07', 'post::create_question', '2010-03-21 06:06:19', 'post::create_answer', 0),
+(12, 6, '', '', 'Yes it is.', 'publish', 11, 'answer', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-03-21 06:06:19', 'question::detail', '0000-00-00 00:00:00', '', 0),
+(13, 7, '', '', 'High Impact Polystyrene isn''t really plastic tho...', 'publish', 11, 'comment', 'normal', 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', '2010-04-01 11:15:13', 'post::create_comment', '0000-00-00 00:00:00', '', 0);
 
 --
 -- Dumping data for table `qa_posts_tags`
@@ -105,14 +107,29 @@ INSERT INTO `qa_roles_users` (`user_id`, `role_id`) VALUES
 (3, 2),
 (4, 2),
 (5, 2),
-(6, 1);
+(6, 1),
+(7, 2);
 
 --
 -- Dumping data for table `qa_settings`
 --
 
 INSERT INTO `qa_settings` (`id`, `name`, `value`, `autoload`, `date_created`, `created_by`, `date_modified`, `modified_by`, `is_deleted`) VALUES
-(1, 'site_name', 'Qanda Q&amp;A', 1, '2010-02-27 11:50:00', 'TL', '0000-00-00 00:00:00', '', 0);
+(1, 'site_name', 'Qanda Q&amp;A', 1, '2010-02-27 11:50:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(2, 'users_can_register', '1', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(3, 'site_description', 'Open Source Q&A Platform in PHP5', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(4, 'admin_email', 'lorem@ipsum.com', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(5, 'current_theme', 'default', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(6, 'guests_can_question', '1', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(7, 'guests_can_answer', '1', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(8, 'guests_can_comment', '0', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(9, 'date_format', 'd/m/Y', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(10, 'time_format', 'g:i a', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(11, 'language', 'en', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(12, 'database_version', '10', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(13, 'show_avatars', '1', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(14, 'avatar_rating', 'G', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0),
+(15, 'timezone_name', 'Australia/Sydney', 1, '2010-04-01 21:48:00', 'TL', '0000-00-00 00:00:00', '', 0);
 
 --
 -- Dumping data for table `qa_tags`
@@ -182,7 +199,8 @@ INSERT INTO `qa_users` (`id`, `email`, `username`, `password`, `logins`, `last_l
 (3, 'bobby@test.com', 'bobby-rc2k', 'b4506b8a7fb96158964afd280d881243622960528c720c2778', 0, 0, '', 'Bobby Lu', '', '0000-00-00', '', '', '0000-00-00 00:00:00', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '2010-02-28 12:58:10', 'post::create_question', '0000-00-00 00:00:00', '', 0),
 (4, 'julia@test.com', 'julia-jjm2', 'a63746aacd2a5c1d93b846c66e974e1c4a4fd37da1615eff20', 0, 0, '', 'Julia Junior', '', '0000-00-00', '', '', '0000-00-00 00:00:00', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '2010-02-28 12:59:19', 'post::create_question', '0000-00-00 00:00:00', '', 0),
 (5, 'chris@test.com', 'chris-b-rox2', '601670efbe9ba664c802c7d9173ddac9e1bf667be88b2eb798', 0, 0, '', 'Chris B.', '', '0000-00-00', '', '', '0000-00-00 00:00:00', '', '', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2010-02-28 13:01:07', 'post::create_question', '2010-02-28 13:01:07', 'post::create_question', 0),
-(6, 'charlie@test.com', 'charlie', '233d41ed4cc32deda2f71dcdd6cfa941ea5a5b12b84c799ae9', 1, 1269151549, '', 'Charlie Brown', '', '0000-00-00', '', 'efpwdvoa7pjk1uvov1torhmubrixqmlp', '2010-03-21 06:05:49', '127.0.0.1', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6 GTB6', 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, '2010-03-21 06:05:49', 'user::create_user', '0000-00-00 00:00:00', '', 0);
+(6, 'charlie@test.com', 'charlie', '233d41ed4cc32deda2f71dcdd6cfa941ea5a5b12b84c799ae9', 1, 1269151549, '', 'Charlie Brown', '', '0000-00-00', '', 'efpwdvoa7pjk1uvov1torhmubrixqmlp', '2010-03-21 06:05:49', '127.0.0.1', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6 GTB6', 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, '2010-03-21 06:05:49', 'user::create_user', '0000-00-00 00:00:00', '', 0),
+(7, 'jimmy@guest.com', 'jimmy-guest-m2bj', '75ae646fa472c27e5656dd2daf35c7186b231b8005756a4d54', 0, 0, '', 'Jimmy Guest', '', '0000-00-00', '', '', '0000-00-00 00:00:00', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2010-04-01 11:15:13', 'post::create_question', '0000-00-00 00:00:00', '', 0);
 
 --
 -- Dumping data for table `qa_user_metas`

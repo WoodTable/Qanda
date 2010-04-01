@@ -20,7 +20,7 @@
                     <?php foreach($users as $index => $user): ?>
 
                         <?php
-                            $form       = View::factory($theme_url.'partials/user_flair');
+                            $form       = View::factory($theme_url.'module_user_thumbnail');
                             $form->user = $user;
                             $form->render(TRUE);
                         ?>
@@ -31,7 +31,7 @@
             </div><?php /* END .main-bar */ ?>
 
             
-            <?php View::factory($theme_url.'sidebar')->render(TRUE); ?>
+            <?php View::factory($theme_url.'module_sidebar')->render(TRUE); ?>
 
             <div class="clearfix"></div>
 

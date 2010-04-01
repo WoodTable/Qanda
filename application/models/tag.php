@@ -18,11 +18,36 @@ class Tag_Model extends ORM
 {
     protected $has_and_belongs_to_many = array('posts');
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
+    //----------------------- STATIC METHODS --------------------------//
+
+    /**
+     * List of Active Tags
+     *
+     * @param int $page_number
+     * @param int $page_size
+     * @return ORM_Iterator
+     * @static
+     */
+    public function get_active_tags($page_number, $page_size)
+    {
+        //-- Query
+        $tags = $this
+            ->where('is_deleted', 0)
+            ->where(array('post_count >' => 0))
+            ->orderby('post_count', 'desc')
+            ->find_all();
+
+        return $tags;
+    }
+
     /**
      * Set Tag Involvement of User
      *
      * @param int $tag_id
      * @param int $user_id
+     * @static
      */
     public function set_user_involvement($tag_id, $user_id)
     {
@@ -71,6 +96,7 @@ class Tag_Model extends ORM
      * to those tags
      * 
      * @param int $user_id
+     * @static
      */
     public function get_inolved_tags($user_id)
     {
@@ -101,5 +127,7 @@ class Tag_Model extends ORM
         //-- Output
         return $tags;
     }
+
+    //----------------------- PRIVATE METHODS --------------------------//
 
 }//END class

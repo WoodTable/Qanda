@@ -11,7 +11,7 @@
  * Define the base memory usage before Kohana is loaded. This value will be used
  * for benchmark purposes.
  */
-define('BASE_MEMORY_USAGE', memory_get_peak_usage());
+//define('BASE_MEMORY_USAGE', memory_get_peak_usage());
 
 /**
  * Define the website environment status. When this flag is set to TRUE, some
