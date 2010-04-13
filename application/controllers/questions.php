@@ -72,10 +72,8 @@ class Questions_Controller extends Website_Controller
         //-- Get Question
         $question = ORM::factory('post', $question_id);
 
-        //--
+        //-- Event Hooks
         $this->increase_view_count($question_id);
-        $this->log_activity('view', 'post', $question_id);
-
 
         //-- Get Answers
         $total_items    = ORM::factory('post')->count_all_answers($question_id);
@@ -125,7 +123,7 @@ class Questions_Controller extends Website_Controller
             {
                 throw new Kohana_User_Exception('Fail to Create Question', 'Cannot create question. Caught exception: '.$ex->getMessage());
             }
-
+            
             //-- Fetch the newly Created Question
             $question = ORM::factory('post', $question_id);
             

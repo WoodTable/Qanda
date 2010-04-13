@@ -348,20 +348,24 @@ class Post_Model extends ORM
         {
             //-- Update Question's answer count and last activity date
             $question = ORM::factory('post', $question_id);
-            $question->answer_count += 1;
-            $question->last_activity_date = date::timestamp();
-            $question->date_modified = date::timestamp();
-            $question->modified_by = 'post::create_answer';
+            $question->answer_count        += 1;
+            $question->last_activity_date   = date::timestamp();
+            $question->date_modified        = date::timestamp();
+            $question->modified_by          = 'post::create_answer';
             $question->save();
             
             //-- Update User's answer count
-            //NOTE: User model are already loaded
-            $user->answer_count += 1;
+            $user->answer_count        += 1;
+            //-- Update User's Last Acitivty
+            $user->last_activity_date   = date::timestamp();
+            $user->last_ip_address      = client::ip_address();
+            $user->last_user_agent      = Kohana::user_agent();
             $user->save();
 
             //-- Add User activity
             ORM::factory('activity')->log($user->id, 'create', 'post', $answer->id);
 
+            //TODO: Apply exception when 1) answer owner is also the question owner or 2) answer owner already has answer to this question
             //-- Update User's tag involvement
             ORM::factory('tags_user')->tag_answer($user->id, $question->id, $answer->id);
 
@@ -413,14 +417,9 @@ class Post_Model extends ORM
             //-- Register as Guest
             $user               = ORM::factory('user');
             $user->display_name = $post->display_name;
-            //$user->username     = 'guest-'.strtolower(text::random('alnum', 4)); //TODO: Use helper to generate guest account name
             $user->username     = url::title($user->display_name).'-'.strtolower(text::random('alnum', 4));
             $user->password     = $user->username;
             $user->email        = $post->email;
-            //TODO: last activity date
-            //TODO: last ip address
-            //TODO: last user agent
-            //TODO: question count
             $user->date_created = date::timestamp();
             $user->created_by   = 'post::create_question';
             $user->add(ORM::factory('role', 'guest'));
@@ -468,11 +467,11 @@ class Post_Model extends ORM
 
             if($tag->id == 0)
             {
-                $tag->name = $tag_name;
-                $tag->slug = $tag_slug;
-                $tag->post_count = 1;
-                $tag->date_created = date::timestamp();
-                $tag->created_by = 'post::create_question';
+                $tag->name          = $tag_name;
+                $tag->slug          = $tag_slug;
+                $tag->post_count    = 1;
+                $tag->date_created  = date::timestamp();
+                $tag->created_by    = 'post::create_question';
                 try
                 {
                     $tag->save();
@@ -484,10 +483,10 @@ class Post_Model extends ORM
             }
             else if($tag->is_deleted == 1)
             {//-- Revitalise deleted tag
-                $tag->is_deleted = 0;
-                $tag->post_count = 1;
+                $tag->is_deleted    = 0;
+                $tag->post_count    = 1;
                 $tag->date_modified = date::timestamp();
-                $tag->modified_by = 'post::create_question';
+                $tag->modified_by   = 'post::create_question';
                 try
                 {
                     $tag->save();
@@ -499,9 +498,9 @@ class Post_Model extends ORM
             }
             else
             {//-- Increment Tag count
-                $tag->post_count += 1;
+                $tag->post_count   += 1;
                 $tag->date_modified = date::timestamp();
-                $tag->modified_by = 'post::create_question';
+                $tag->modified_by   = 'post::create_question';
                 try
                 {
                     $tag->save();
@@ -514,7 +513,7 @@ class Post_Model extends ORM
 
             //-- User Tag Involvement
             ORM::factory('tag')->set_user_involvement($tag->id, $user->id);
-            
+
             //-- Add Tag to Qustion
             //TODO: Needs to handle exception
             $question->add(ORM::factory('tag', $tag->id));
@@ -527,9 +526,11 @@ class Post_Model extends ORM
         if($success == TRUE)
         {
             //-- Increase User's Question Count
-            $user->question_count += 1;
-            $user->date_modified = date::timestamp();
-            $user->modified_by = 'post::create_question';
+            $user->question_count      += 1;
+            //-- Update User's Last Acitivty
+            $user->last_activity_date   = date::timestamp();
+            $user->last_ip_address      = client::ip_address();
+            $user->last_user_agent      = Kohana::user_agent();
             $user->save();
 
             //-- Output
@@ -550,7 +551,7 @@ class Post_Model extends ORM
     {
         //-- Local Variables
         $body           = $post->post_body;
-        $post_parent_id    = $post->target_post_id;
+        $post_parent_id = $post->target_post_id;
 
         //-- Sanitize
         if($body == '')
@@ -614,7 +615,18 @@ class Post_Model extends ORM
         {
             //-- Add User activity
             ORM::factory('activity')->log($user->id, 'create', 'post', $comment->id);
-            
+
+            //-- Update User's Last Activity
+            $user->last_activity_date   = date::timestamp();
+            $user->last_ip_address      = client::ip_address();
+            $user->last_user_agent      = Kohana::user_agent();
+            $user->save();
+
+            //-- Update Posts Comment Count
+            $post = ORM::factory('post', $post_parent_id);
+            $post->comment_count += 1;
+            $post->save();
+
             //-- Output
             return $comment->id;
         }
@@ -667,6 +679,14 @@ class Post_Model extends ORM
 
         //-- Log activity
         ORM::factory('activity')->log($user->id, $action_key, 'post', $post_id);
+
+        //-- Increase User's Down Vote Cast Count
+        $user->down_vote_casted    += 1;
+        //-- Update User's Last Activity
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = client::ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->save();
     }
 
     /**
@@ -714,6 +734,14 @@ class Post_Model extends ORM
 
         //-- Log activity
         ORM::factory('activity')->log($user->id, $action_key, 'post', $post_id);
+
+        //-- Increase User's Down Vote Cast Count
+        $user->down_vote_casted    += 1;
+        //-- Update User's Last Activity
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = client::ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->save();
     }
 
     /**
@@ -745,6 +773,18 @@ class Post_Model extends ORM
 
         //-- Log activity
         ORM::factory('activity')->log($user->id, 'bookmark', 'post', $question_id);
+
+        //-- Increase Question's Bookmark Count
+        $question->bookmark_count += 1;
+        $question->save();
+        
+        //-- Increase User's Bookmark Count
+        $user->post_bookmarked     += 1;
+        //-- Update User's Last Activity
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = client::ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->save();
     }
 
     /**

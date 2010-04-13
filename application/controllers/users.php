@@ -62,6 +62,9 @@ class Users_Controller extends Website_Controller
         $answered_questions = ORM::factory('post')->get_answered_questions($user->id);
         //TODO: Limit Number of Tags Shown (instead of Paginate)
         $involved_tags      = ORM::factory('tag')->get_inolved_tags($user->id);
+
+        //-- Event Hooks
+        $this->increase_view_count($user->id);
         
         //-- Render View
         $this->template->content = View::factory('themes/default/user_detail')
@@ -173,7 +176,24 @@ class Users_Controller extends Website_Controller
             $this->template->content = View::factory('themes/default/user_register');
         }
     }
-    
+
+    //----------------------- PRIVATE METHODS --------------------------//
+
+    /**
+     * Increase User View Count by 1
+     *
+     * @param int $user_id
+     */
+    private function increase_view_count($user_id)
+    {
+        //-- Initialise Model
+        $user = ORM::factory('user', $user_id);
+
+        //--NOTE: Currently using linear incremental on view count, which means every refresh will increase this count
+        $user->profile_view_count += 1;
+        $user->save();
+    }
+
     //----------------------- PLACE HOLDERS --------------------------//
 
     /**

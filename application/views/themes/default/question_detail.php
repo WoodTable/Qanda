@@ -31,7 +31,7 @@
                         <div class="favorite">
                             <?php echo html::anchor('questions/bookmark/'.$question->id, 'Bookmark'); ?>
                             <br/>
-                            <?php echo $question->favorite_count; ?>
+                            <?php echo $question->bookmark_count; ?>
                         </div>
                         <div class="view">
                             <span>View</span>

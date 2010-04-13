@@ -29,11 +29,8 @@ CREATE TABLE IF NOT EXISTS `qa_users` (
     `up_vote_casted`        int(11) unsigned    NOT NULL DEFAULT '0',
     `down_vote_casted`      int(11) unsigned    NOT NULL DEFAULT '0',
     `badge_count`           int(11) unsigned    NOT NULL DEFAULT '0',
-    `question_viewed`       int(11) unsigned    NOT NULL DEFAULT '0',
     `post_bookmarked`        int(11) unsigned    NOT NULL DEFAULT '0',
     `profile_view_count`    int(11) unsigned    NOT NULL DEFAULT '0' COMMENT 'number of times viewed by others',
-    `consecutive_visit_day` int(11) unsigned    NOT NULL DEFAULT '0',
-    `consecutive_answer_day` int(11) unsigned   NOT NULL DEFAULT '0',
     
     -- Package Foot
     `date_created`          datetime        NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -131,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `qa_posts` (
     `view_count`            int(11)             NOT NULL DEFAULT '0',
     `answer_count`          int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',
     `comment_count`         int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions and answers',
-    `favorite_count`        int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',    
+    `bookmark_count`        int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',    
     `last_activity_date`    datetime            NOT NULL DEFAULT '0000-00-00 00:00:00'  COMMENT 'Only applicable to questions',
     
     -- Package Foot

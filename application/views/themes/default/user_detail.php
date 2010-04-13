@@ -26,7 +26,7 @@
                             <br/><span class="label">reputation</span>
                         </div>
                         <div class="view-count">
-                            <?php echo count($user->profile_view_count).' '.inflector::plural('view', count($user->profile_view_count)); ?>
+                            <?php echo $user->profile_view_count.' '.inflector::plural('view', $user->profile_view_count); ?>
                         </div>
                     </div>
 
@@ -71,7 +71,7 @@
                         <?php foreach($asked_questions as $index => $question): ?>
                             <div class="question">
                                 <span>
-                                    <?php echo $question->favorite_count; ?>
+                                    <?php echo $question->bookmark_count; ?>
                                     | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                                     | <?php echo $question->answer_count; ?>
                                     | <?php echo $question->view_count; ?>
@@ -89,7 +89,7 @@
                         <?php foreach($answered_questions as $index => $question): ?>
                             <div class="question">
                                 <span>
-                                    <?php echo $question->favorite_count; ?>
+                                    <?php echo $question->bookmark_count; ?>
                                     | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                                     | <?php echo $question->answer_count; ?>
                                     | <?php echo $question->view_count; ?>
