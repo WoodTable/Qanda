@@ -4,7 +4,15 @@
 Project:	    Qanda
 Author:         Travis <travis@travaganza.com.au>
 Since:	        1.0.0
-Last Modified:	2010-03-28
+Last Modified:	2010-04-22
+
+Orange  #F47608
+    75% #F79846
+    50% #F9BA83
+    25% #FBDCC0
+White   #FEFEFE
+Maroon  #651703
+
 
 [TABLE OF CONTENTS]
 1. CSS Reset
@@ -39,6 +47,7 @@ Last Modified:	2010-03-28
 14. Widgets
     14.1 Login Form
     14.2 User Detail
+    14.3 Welcome Box
 15. CSS Tools
     15.1 Clear Fix
     15.2 Image Replacement
@@ -70,18 +79,18 @@ abbr,acronym { border:0; }
 
 body {
     color: #333;
-    /*font-family: Tahoma, Helvetica, sans-serif;*/
-    font-family: helvetica, arial;
+    font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
     font-size: 14px;
+    background-color: #F47608;
 }
 
 h1 { font-size: 32px; }
 h2 { font-size: 28px; }
-h3 { font-size: 22px; }
+h3 { font-size: 20px; }
 h4 { font-size: 16px; }
 
 a {
-    color: #AE1B13;
+    color: #7F341F;
 }
 
 a:link, a:visited {
@@ -89,7 +98,13 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
-    text-decoration: underline;
+    color: #AF3615;
+}
+
+form input:focus,
+form textarea:focus {
+    -webkit-box-shadow: 0 0 5px #F47608;
+    -moz-box-shadow:0 0 5px #F47608;
 }
 
 
@@ -99,6 +114,7 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 #wrapper {
+    
 }
 
 
@@ -108,37 +124,45 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 #header {
-    background: #00415C url(../images/header-background.gif) repeat-x 0 0;
-    padding: 20px 0 0 0;
+    height: 150px;
+    width: 940px;
+    margin: 20px auto;
+    background: transparent url(../images/qanda-logo.png) no-repeat 0 0;
 }
 
 #header-inner {
-    width: 940px;
-    margin: 0 auto;
-    padding: 0 0 20px 0;
+    padding: 40px 10px 10px 200px;
 }
 
     /* -------------------------------------------------------------- */
     /* 4.1 Logo                                                       */
-    
-    #header .logo h1 a {
-        color: #FFF;
+
+    #header .logo {
+
     }
 
+    #header .logo h1 a {
+        color: #FEFEFE;
+    }
 
+    #header .logo p {
+        font-size: 16px;
+        color: #FEFEFE;
+    }
 
 /* -------------------------------------------------------------- */
 /* 5. Navigation
 /* -------------------------------------------------------------- */
 
 #navigation {
-    background-color: #E8EBEC;
-    border-bottom: 1px solid #BAC2C6;
+    width: 960px;
+    margin: 0 auto;
 }
 
 #navigation-inner {
-    width: 940px;
-    margin: 0 auto;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border: 3px solid #FEFEFE;
 }
 
     /* -------------------------------------------------------------- */
@@ -156,28 +180,22 @@ a:hover, a:active {
     #navigation ul li a {
         display: block;
         padding: 7px 15px 7px 16px;
-        border-left: 1px solid #BAC2C6;
+        border-left: 3px solid #FEFEFE;
+        font-weight: bold;
+        color: #FEFEFE;
+    }
+
+    #navigation ul li a:hover,
+    #navigation ul li a:active {
+        color: #FBDCC0;
+    }
+
+    #navigation ul li.first a {
+        border: none;
     }
 
     #navigation ul li.last a {
-        border-right: 1px solid #BAC2C6;
-    }
-
-    /* -------------------------------------------------------------- */
-    /* 5.2 Search Engine                                              */
-
-    #navigation .search-engine {
-        float: right;
-        margin: 5px 0 0 0;
-    }
-
-    #navigation .search-engine form label {
-        display: none;
-    }
-
-    #navigation .search-engine form #search {
-        border: 1px solid #AAAAAA;
-        padding: 2px;
+        border-right: 3px solid #FEFEFE;
     }
 
 
@@ -187,16 +205,21 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 #content {
-    width: 940px;
-    margin: 0 auto;
-    padding: 20px 0 20px 0;
+    width: 900px; /* 960 - 30 - 30 */
+    min-height: 600px;
+    margin: 30px auto 10px auto;
+    padding: 40px 30px;
+    background-color: #FEFEFE;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+
 }
 
     /* -------------------------------------------------------------- */
     /* 6.1 Main Bar                                                   */
 
     #content .main-bar {
-        width: 710px;
+        width: 660px;
         float: left;
     }
 
@@ -232,10 +255,10 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 #footer{
-    background-color: #EEEEEE;
-    color: #777777;
-    border-top: 2px solid #ACAEAF;
-    padding: 20px 0;
+    color: #FEFEFE;
+    padding: 10px 0 20px 0;
+    text-align: center;
+    font-size: 12px;
 }
 
 #footer-inner{
@@ -258,55 +281,80 @@ a:hover, a:active {
         padding: 0 0 10px 0;
     }
 
-    .question-summary .votes,
-    .question-summary .answers,
-    .question-summary .views {
-        text-align: center;
-        width: 50px;
-        height: 50px;
+    .question-summary .stats {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        background-color: #FBDCC0;
         float: left;
-        margin: 0 5px 0 0;
+        width: 80px;
+        padding: 0 0 5px 0;
+        text-align: center;
     }
 
-    .question-summary .votes .count,
-    .question-summary .answers .count,
-    .question-summary .views .count {
-        font-size: 22px;
+    .question-summary .stats .answers {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        background-color: #F47608;
+        width: 65px;
+        margin: 2px auto 5px auto;
+        padding: 4px 0;
+    }
+
+    .question-summary .stats .answered {
+        background: #F47608 url(../images/accepted-answer-background.png) 100% 100% no-repeat;
+    }
+
+
+    .question-summary .stats .votes .count,
+    .question-summary .stats .answers .count {
+        font-size: 18px;
         font-weight: bold;
-        display: block;
     }
 
-    .question-summary .votes .label,
-    .question-summary .answers .label,
-    .question-summary .views .label {
+    .question-summary .stats .votes .label,
+    .question-summary .stats .answers .label,
+    .question-summary .stats .views .label {
         font-size: 12px;
+    }
+
+    .question-summary .stats .votes .count,
+    .question-summary .stats .answers .count,
+    .question-summary .stats .votes .label,
+    .question-summary .stats .answers .label {
         display: block;
     }
 
-    .question-summary .votes {
-        background-color: #E8EBEC;
-    }
 
-    .question-summary .answers {
-        background-color: #B5C8CF;
-    }
-
-    .question-summary .views {
-        background-color: #83AEBF;
+    .question-summary .stats .answers .count,
+    .question-summary .stats .answers .label {
+        color: #FEFEFE;
     }
 
     .question-summary .summary {
-        width: 540px; /*465px*/
+        width: 560px;
         float: left;
+        margin: 0 0 0 15px;
     }
 
     .question-summary .summary h3 {
-        margin: 0 0 3px 0;
+        margin: 0 0 6px 0;
+    }
+
+    .question-summary .summary p.excerpt {
+        margin: 0 0 6px 0;
     }
 
     .question-summary .summary .meta {
         float: right;
+        margin: 6px 0 0 0;
     }
+
+    .question-summary .summary .meta .reputation {
+        background: transparent url(../images/reputation-icon.png) no-repeat 0 0;
+        padding: 0 0 0 12px;
+    }
+
+
 
     /* -------------------------------------------------------------- */
     /* 8.2 Question/Answer Detail                                     */
@@ -314,61 +362,120 @@ a:hover, a:active {
     .post-detail {
         margin: 15px 0 0 0;
     }
-    
-    .post-detail .panel {
-        width: 50px;
-        float: left;
-        text-align: center;
-    }
 
-    .post-detail .panel .score {
-        font-size: 28px;
-        font-weight: bold;
-    }
+        /* -------------------------------------------------------------- */
+        /* 8.2.1 Panel                                                    */
 
-    .post-detail .detail {
-        width: 640px;
-        float: left;
-        margin: 0 0 0 10px;
-    }
+        .post-detail .panel {
+            width: 50px;
+            float: left;
+        }
 
-    .post-detail ul.tags {
-        margin: 10px 0 0 0;
-    }
+        .post-detail .panel .up-vote a {
+            width: 40px;
+            height: 30px;
+            background: transparent url(../images/up-arrow-inactive.png) no-repeat 0 0;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .post-detail .meta,
-    .post-detail .add-comment {
-        width: 400px;
-        float: left;
-        margin: 15px 0 0 0;
-    }
+        .post-detail .panel .score {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
 
-    .post-detail .user-summary {
-        float: right;
-    }
-    
+        .post-detail .panel .down-vote a {
+            width: 40px;
+            height: 30px;
+            background: transparent url(../images/down-arrow-inactive.png) no-repeat 0 0;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .post-detail .panel .bookmark a {
+            width: 25px; /* 40 - 15 */
+            height: 25px; /* 40 - 15 */
+            background: transparent url(../images/star-inactive.png) no-repeat 0 0;
+            display: block;
+            margin: 10px auto 0 auto;
+            padding: 15px 0 0 15px;
+        }
+
+        .post-detail .panel .view {
+            text-align: center;
+            margin: 10px 0 0 0;
+            color: #999;
+        }
+
+        /* -------------------------------------------------------------- */
+        /* 8.2.1 Detail                                                    */
+
+        .post-detail .detail {
+            width: 595px;
+            float: left;
+            margin: 0 0 0 10px;
+        }
+
+        .post-detail .detail .content {
+            overflow: auto;
+        }
+
+        .post-detail .detail .add-comment a {
+            border: 1px solid #BAC2C6;
+            padding: 2px 6px;
+        }
+
+        .post-detail .detail .add-comment a:hover,
+        .post-detail .detail .add-comment a:active {
+            background-color: #EFEFEF;
+            padding: 2px 6px;
+        }
+
+
+        .post-detail ul.tags {
+            margin: 10px 0 0 0;
+        }
+
+        .post-detail .meta,
+        .post-detail .add-comment {
+            width: 400px;
+            float: left;
+            margin: 15px 0 0 0;
+        }
+
+        .post-detail .user-summary {
+            float: right;
+        }
+
+
+        
     /* -------------------------------------------------------------- */
     /* 8.3 Question/Answer Comments                                   */
 
     .post-detail .comments {
-        width: 640px;
+        width: 600px;
         float: left;
-        margin: 10px 0 0 0;
-        border-top: 1px dashed #aaa;
+        margin: 15px 0 0 10px;
+        border-top: 1px dashed #BAC2C6;
     }
     
     .post-detail .comments .comment {
         margin: 5px 0 0 0;
     }
 
+    /*
     .post-detail .comments .comment .comment-panel {
         float: left;
     }
-
+    */
+    
     .post-detail .comments .comment .content {
         float: left;
+        /*
         width: 550px;
         margin: 0 0 0 5px;
+        */
     }
 
     
@@ -393,23 +500,36 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 .user-summary {
-    width: 145px;
-    height: 35px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    width: 150px;
+    height: 50px;
     border: 1px solid #BAC2C6;
-    margin: 10px 10px 0 0;
-    padding: 5px;
+    margin: 10px 12px 0 0;
     float: left;
     background-color: #EFEFEF;
 }
 
 .user-summary .avatar {
     float: left;
+    margin: 9px 0 0 9px;
 }
 
 .user-summary .user-details {
     float: left;
-    margin: 0 0 0 3px;
+    margin: 9px 0 0 8px;
+    width: 90px;
+    overflow: hidden;
+    white-space: nowrap;
 }
+
+.user-summary .user-details .reputation {
+    background: transparent url(../images/reputation-icon.png) no-repeat 0 0;
+    padding: 0 0 0 12px;
+}
+
+
+
 
     /* -------------------------------------------------------------- */
     /* 10.1 Registeration Form                                        */
@@ -537,11 +657,11 @@ a:hover, a:active {
         .vcard .summary {
             float: left;
             margin: 0 5px 0 0;
-            width: 380px;
+            width: 355px;
         }
 
         .vcard .summary div .label {
-            width: 150px;
+            width: 130px;
             float: left;
             margin: 5px 0;
         }
@@ -568,54 +688,44 @@ a:hover, a:active {
 /* -------------------------------------------------------------- */
 
 .tag-summary {
-    width: 145px;
-    margin: 10px 10px 0 0;
-    float: left;
-}
-
-.tag a{
-    border: 1px solid #BAC2C6;
-    padding: 3px 4px;
-    text-decoration: none;
-    background-color: #EFEFEF;
-}
-
-.tag a:hover,
-.tag a:active {
-    background-color: #E0EBEF;
-}
-
-
-
-/* -------------------------------------------------------------- */
-/* 12. Badges
-/* -------------------------------------------------------------- */
-
-.badge-summary {
-    margin: 15px 0;
-}
-
-.badge-summary .item {
-    float: left;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
     width: 200px;
-}
-
-.badge-summary .item a.badge {
-    border: 1px solid #BAC2C6;
-    padding: 3px 4px;
-    text-decoration: none;
-    background-color: #EFEFEF;
-}
-
-.badge-summary .item a.badge:hover,
-.badge-summary .item a.badge:active {
-    background-color: #E0EBEF;
-}
-
-.badge-summary .badge-description {
+    margin: 15px 20px 0 0;
     float: left;
-    border: 1px solid green;
+    background-color: #F79846;
 }
+    /* -------------------------------------------------------------- */
+    /* 11.1 Generic Tag                                             */
+
+    .tag a{
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        padding: 4px 8px;
+        text-decoration: none;
+        background-color: #FBDCC0;
+    }
+
+    .tag a:hover,
+    .tag a:active {
+        background-color: #F9BA83;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 11.2 Tag with Counts                                           */
+
+    .tag-summary .tag a{
+        padding: 4px 8px;
+        width: 160px;
+        display: block;
+        float: left;
+    }
+
+    .tag-summary .count{
+        display: block;
+        float: right;
+        padding: 4px 8px;
+    }
 
 
 
@@ -713,12 +823,38 @@ a:hover, a:active {
 
     .pagination {
         /*border: 1px solid red;*/
+        margin: 10px 0 0 0;
     }
 
     .pagination span {
-        /*border: 1px solid blue;*/
         padding: 5px;
-        margin: 0 2px;
+        margin: 5px 2px 0 2px;
+        display: block;
+        float: left;
+        text-align: center;
+    }
+
+    .pagination span.page {
+        border: 2px solid #F47608;
+        width: 20px;
+        text-align: center;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .pagination span.current_page {
+        color: #F47608;
+        background-color: #FBDCC0;
+    }
+
+    .pagination span a {
+        padding: 4px 6px;
+    }
+
+    .pagination span a:hover,
+    .pagination span a:active {
+        color: #F47608;
     }
 
 
@@ -731,7 +867,15 @@ a:hover, a:active {
         border: 1px solid #ACAEAF;
         padding: 15px 10px 10px 15px;
         margin: 0 0 15px 0;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
     }
+
+    .widget h3 {
+        margin: 0 0 10px 0;
+    }
+
+
 
     /* -------------------------------------------------------------- */
     /* 14.1 Login Form                                                */
@@ -749,6 +893,12 @@ a:hover, a:active {
         margin: 3px 0;
     }
 
+    /* -------------------------------------------------------------- */
+    /* 14.3 Welcome Box                                               */
+
+    #welcome-widget p {
+        margin: 10px 0;
+    }
 
 
 /* -------------------------------------------------------------- */

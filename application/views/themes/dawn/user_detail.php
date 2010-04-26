@@ -19,7 +19,7 @@
                 <div class="vcard clearfix">
                     <div class="meta">
                         <div class="avatar">
-                            <img src="<?php echo html::specialchars('http://www.gravatar.com/avatar/123456?s=128&d=identicon&r=PG'); ?>" width="128" height="128" alt="" />
+                            <img src="<?php echo $user->get_gravatar_url(128); ?>" width="128" height="128" alt="" />
                         </div>
                         <div class="reputation">
                             <span class="value"><?php echo $user->reputation_score; ?></span>

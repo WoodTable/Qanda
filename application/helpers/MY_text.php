@@ -44,5 +44,43 @@ class text extends text_Core
         return $text;
     }
     */
-    
+
+    /**
+     * Truncates text.
+     *
+     * Cuts a string to the length of $length and replaces the last characters
+     * with the ending if the text is longer than length.
+     *
+     * REF: http://api11.cakephp.org/text_8php-source.html
+     * 
+     * @param string  $text String to truncate.
+     * @param integer $length Length of returned string, including ellipsis.
+     * @param string  $ending Ending to be appended to the trimmed string.
+     * @param boolean $exact If false, $test will not be cut mid-word
+     * @return string Trimmed string.
+     * @access public
+     */
+    function truncate($text, $length, $ending = '...', $exact = true)
+    {
+        if (strlen($text) <= $length)
+        {
+            return $text;
+        }
+        else
+        {
+            $truncate = substr($text, 0, $length - strlen($ending));
+            if ($exact == FALSE)
+            {
+                $spacepos = strrpos($truncate, ' ');
+                if (isset($spacepos))
+                {
+                    return substr($truncate, 0, $spacepos) . $ending;
+                }
+            }
+            return $truncate . $ending;
+        }
+    }
+
+
+
 }//END class

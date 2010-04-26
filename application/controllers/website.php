@@ -17,10 +17,7 @@
 class Website_Controller extends Template_Controller
 {
     //-- Global Variables
-    public $template = 'themes/default/master'; // In application/views folder
-    //public $auto_render = TRUE;               // Not used
-    //protected $db;                            // Not used
-    //protected $session;                       // Not used
+    public $template; // In application/views folder
     protected $settings;
     
     /**
@@ -28,14 +25,18 @@ class Website_Controller extends Template_Controller
      */
 	public function __construct()
 	{
+        //-- Load Settings
+        $this->settings = ORM::factory('setting');
+        $this->settings->autoload();
+
+        //-- Set Theme Template
+        $this->template = 'themes/'.$this->settings->get('current_theme').'/master';
+
+        //-- Initiate Template_Controller constructor
 		parent::__construct();
 
         //-- Enable Session on All Pages
         //$this->session = Session::instance(); // Not used
-
-        //-- Load Settings
-        $this->settings = ORM::factory('setting');
-        $this->settings->autoload();
 
         //-- Template Head
         $this->head = Head::instance();
@@ -45,6 +46,8 @@ class Website_Controller extends Template_Controller
 
         //-- Template Global Variables
         $this->template->set_global('theme_url', 'themes/'.$this->settings->get('current_theme').'/');
+        $this->template->set_global('current_version', $this->settings->get('version'));
+
 	}
 
     //----------------------- PUBLIC METHODS --------------------------//

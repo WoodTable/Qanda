@@ -85,7 +85,7 @@ class Comments_Controller extends Website_Controller
             }
 
             //-- Render View
-            $this->template->content = View::factory('themes/default/comment_create')
+            $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/comment_create')
                 ->bind('answer', $answer)
                 ->bind('question', $question)
                 ->bind('post_type', $post_type)

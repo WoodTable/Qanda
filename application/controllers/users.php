@@ -38,7 +38,7 @@ class Users_Controller extends Website_Controller
         $users = ORM::factory('user')->list_all_users();
 
         //-- Render View
-        $this->template->content = View::factory('themes/default/user_list')
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/user_list')
             ->bind('users', $users);
     }
 
@@ -67,7 +67,7 @@ class Users_Controller extends Website_Controller
         $this->increase_view_count($user->id);
         
         //-- Render View
-        $this->template->content = View::factory('themes/default/user_detail')
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/user_detail')
             ->bind('user', $user)
             ->bind('asked_questions', $asked_questions)
             ->bind('answered_questions', $answered_questions)
@@ -111,7 +111,7 @@ class Users_Controller extends Website_Controller
         else
         {
             //-- Show Login Form
-            $this->template->content = View::factory('themes/default/user_login');
+            $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/user_login');
         }
     }
 
@@ -173,7 +173,7 @@ class Users_Controller extends Website_Controller
         else
         {
             //-- Display User Registration Form
-            $this->template->content = View::factory('themes/default/user_register');
+            $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/user_register');
         }
     }
 

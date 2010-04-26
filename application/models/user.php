@@ -18,6 +18,20 @@ class User_Model extends Auth_User_Model
 {
     //----------------------- PUBLIC METHODS --------------------------//
 
+    /**
+     * Generate the Gravatar URL as instructed at http://en.gravatar.com/site/implement/url
+     *
+     * @param int $size
+     * @return string
+     */
+    public function get_gravatar_url($size=80)
+    {
+        $base_url = 'http://www.gravatar.com/avatar/';
+        $output = $base_url.md5($this->email).'?s='.$size.'&amp;d=identicon';
+        
+        return $output;
+    }
+
     //----------------------- STATIC METHODS --------------------------//
 
     /**
@@ -96,7 +110,6 @@ class User_Model extends Auth_User_Model
         $user->last_activity_date       = date::timestamp();
         $user->last_ip_address          = Input::instance()->ip_address();
         $user->last_user_agent          = Kohana::user_agent();
-        $user->consecutive_visit_day    = 1;
         $user->date_created             = date::timestamp();
         $user->created_by               = 'user::create_user';
 

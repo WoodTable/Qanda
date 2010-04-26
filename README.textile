@@ -1,21 +1,21 @@
 h1. Qanda
 
-Version: 0.1.7
+Version: 0.2
 Author: Travis Lin <travis[at]travaganza[dot]com[dot]au>
-
+Website: http://www.qandasystem.com/
 
 
 h2. Description
 
-Qanda is an open-source Question and Answer platform written in PHP 5 and using Kohana MVC framework. It is built with simplicity in mind: lightweight, themable and each to extend.
+Qanda is an open-source Question and Answer System (QAS) written in PHP 5 and using Kohana MVC framework. It is built with simplicity in mind: lightweight, themable and each to extend.
 
-Qanda is currently under alpha mode development, enthusiast developers are welcome to participate in this project.
+Qanda is currently under beta development, we are looking for programming enthusiasts to participate in this exciting project. 
 
 
 
 h2. Design Goal
 
-The aim for 1.0 release is to demostrate Q&A platform at its minimum: that is, the simpliest form.
+The aim for 1.0 release is to demostrate QAS at its minimum: that is, the simpliest form.
 
 Fundamental goal of Qanda 1.0 is to achieve the following:
 
@@ -31,11 +31,11 @@ Qanda is designed with forwarding thinking, features that are not part of fundam
 
 h2. Basic Requirement
 
-* Http Server with Unicode support such as Apache
+* HTTP Server with Unicode support such as Apache
 * PHP version 5.2.3 or above
 * MySQL 5.1 or above
 
-Master project is developing under Apache 2.2.11, PHP 5.3.0 and MySQL 5.1.36.
+Master project is developing and tested in Apache 2.2.11, PHP 5.3.0 and MySQL 5.1.36.
 
 
 
@@ -63,8 +63,7 @@ Please use "GitHub Issues Manager":http://github.com/qanda/Qanda/issues to repor
 
 h2. Demo Site
 
-Demo site is unavailable during experimental phase. Once we have the bread and butter, we'll get the demo site setup right away.
-
+Demo is now available on http://demo.qandasystem.com/ . Feel free to test out the system and have your say on GitHub wiki or issues manager.
 
 
 ****************************************************************************

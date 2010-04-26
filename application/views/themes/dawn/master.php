@@ -21,33 +21,27 @@
 
         <div id="header">
         <div id="header-inner" class="clearfix">
-
             <div class="logo">
                 <h1>
-                    <?php echo html::anchor('/', html::specialchars('Qanda Q&A Platform')); ?>
+                    <?php echo html::anchor('/', $this->settings->get('site_name')); ?>
                 </h1>
+                <p>
+                    <?php echo $this->settings->get('site_description'); ?>
+                </p>
             </div>
-
         </div>
         </div><?php /* END #header */ ?>
 
+        
         <div id="navigation">
         <div id="navigation-inner" class="clearfix">
             <ul class="clearfix">
-                <li><?php echo html::anchor('/', 'Questions'); ?></li>
+                <li class="first"><?php echo html::anchor('/', 'Questions'); ?></li>
                 <li><?php echo html::anchor('/tags/browse', 'Tags'); ?></li>
                 <li><?php echo html::anchor('/users/browse', 'Users'); ?></li>
                 <li><?php echo html::anchor('/questions/unanswered', 'Unanswered'); ?></li>
                 <li class="last"><?php echo html::anchor('/questions/ask', 'Ask Question'); ?></li>
             </ul>
-
-            <div class="search-engine">
-                <?php echo form::open('questions/search', array('class'=>'search_form', 'method'=>'post')); ?>
-                    <?php echo form::label('query', 'Search:'); ?>
-                    <?php echo form::input('query', ''); ?>
-                    <?php echo form::submit('submit-search', 'Search'); ?>
-                <?php echo form::close(); ?>
-            </div>
         </div>
         </div><?php /* END #navigation */ ?>
 
@@ -56,8 +50,8 @@
         <div id="footer">
         <div id="footer-inner">
             <p>
-                Power by Qanda Q&amp;A.
-                User contributed content licensed under <a href="#">cc-wiki</a> with <a href="#">attribution required</a>.
+                Your questions are powered by <a href="http://www.qandasystem.com/">Qanda</a> version <?php echo $current_version; ?>.
+                User contributed content licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="external">cc-wiki</a>.
             </p>
             <p>
                 Execution time: {execution_time} seconds and Memory usage: {memory_usage}

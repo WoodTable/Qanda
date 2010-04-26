@@ -22,14 +22,13 @@
                     </p>
                 </div>
 
-                <div class="tags-list clearfix">
+                <div class="tags clearfix">
                     <?php foreach($tags as $index => $tag): ?>
-                        <div class="tag-summary">
+                        <div class="tag-summary clearfix">
                             <span class="tag">
                                 <?php echo html::anchor('questions/tagged/'.$tag->slug, $tag->name, array('rel'=>'tag')); ?>
                             </span>
-                            x
-                            <span>
+                            <span class="count">
                                 <?php echo $tag->post_count; ?>
                             </span>
                         </div>

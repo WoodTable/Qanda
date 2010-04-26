@@ -8,10 +8,11 @@
  */
 ?>
 
-<div class="pagination">
+<?php if($total_pages > 1): ?>
+<div class="pagination clearfix">
 
 	<?php if ($current_page > 3): ?>
-        <span class="first-page page-1">
+        <span class="page first_page page_1">
             <a href="<?php echo str_replace('{page}', 1, $url) ?>">1</a>
         </span>
 
@@ -28,11 +29,11 @@
 		<?php if ($i < 1 OR $i > $total_pages) continue ?>
 
 		<?php if ($current_page == $i): ?>
-            <span class="current-page page-<?php echo $i; ?>">
+            <span class="page current_page page_<?php echo $i; ?>">
                 <?php echo $i ?>
             </span>
 		<?php else: ?>
-            <span class="page-<?php echo $i; ?>">
+            <span class="page page_<?php echo $i; ?>">
                 <a href="<?php echo str_replace('{page}', $i, $url) ?>">
                     <?php echo $i ?>
                 </a>
@@ -49,7 +50,7 @@
             </span>
         <?php endif; ?>
 
-        <span class="last-page page-<?php echo $total_pages; ?>">
+        <span class="page last_page page_<?php echo $total_pages; ?>">
             <a href="<?php echo str_replace('{page}', $total_pages, $url) ?>">
                 <?php echo $total_pages ?>
             </a>
@@ -57,3 +58,4 @@
 	<?php endif ?>
 
 </div>
+<?php endif; ?>

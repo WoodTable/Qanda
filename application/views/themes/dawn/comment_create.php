@@ -15,7 +15,7 @@
                 <?php if(isset($answer)): ?>
 
                     <div class="subheader">
-                        <h2>Create Comment an Answer</h2>
+                        <h2>Comment on an Answer</h2>
                     </div>
                     <div id="answer_<?php echo $answer->id; ?>" class="post_recap">
                         <p>
@@ -31,7 +31,7 @@
                 <?php else: ?>
                 
                     <div class="subheader">
-                        <h2>Create Comment a Question</h2>
+                        <h2>Comment on a Question</h2>
                     </div>
                     <div id="answer_<?php echo $question->id; ?>" class="post_recap">
                         <p>

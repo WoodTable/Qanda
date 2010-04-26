@@ -40,7 +40,7 @@ class Tags_Controller extends Website_Controller
         $tags = ORM::factory('tag')->get_active_tags($page_number, $page_size);
 
         //-- Render View
-        $this->template->content = View::factory('themes/default/tag_list')
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/tag_list')
             ->bind('tags', $tags);
     }
     

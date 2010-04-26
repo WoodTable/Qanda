@@ -19,24 +19,23 @@
 
                 <div id="question-<?php echo $question->id; ?>" class="post-detail question clearfix">
                     <div class="panel">
-                        <div class="up-vote">
+                        <div class="up-vote ir">
                             <?php echo html::anchor('questions/vote_up/'.$question->id, 'Up'); ?>
                         </div>
                         <div class="score">
                             <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                         </div>
-                        <div class="down-vote">
+                        <div class="down-vote ir">
                             <?php echo html::anchor('questions/vote_down/'.$question->id, 'Down'); ?>
                         </div>
-                        <div class="favorite">
-                            <?php echo html::anchor('questions/bookmark/'.$question->id, 'Bookmark'); ?>
-                            <br/>
-                            <?php echo $question->bookmark_count; ?>
+                        <div class="bookmark">
+                            <?php echo html::anchor('questions/bookmark/'.$question->id, $question->bookmark_count); ?>
                         </div>
                         <div class="view">
-                            <span>View</span>
-                            <br/>
-                            <?php echo $question->view_count; ?>
+                            <small>
+                                <?php echo $question->get_view_count(); ?>
+                                <?php echo $question->get_view_label(); ?>
+                            </small>
                         </div>
                     </div><?php /* END .panel */ ?>
 
@@ -78,19 +77,21 @@
 
                     
                     <?php $question->load_comments(); ?>
-                    <?php if($question->have_comments()): ?>
+                    <?php if($question->has_comments()): ?>
                     <div class="comments">
                         <?php foreach($question->comments as $index => $comment): ?>
                         <div class="comment clearfix">
+                            <?php /***travo20100426: Not Implemented yet
                             <div class="comment-panel">
                                 <span class="score">[<?php echo $comment->up_vote_count - $comment->down_vote_count; ?>]</span>
                                 <span class="up-vote"><?php echo html::anchor('comments/vote_down/'.$comment->id, '[V]'); ?></span>
                                 <span class="flag"><?php echo html::anchor('comments/flag/'.$comment->id, '[F]'); ?></span>
                             </div>
+                            */ ?>
                             <div class="content">
                                 <span class="blurb"><?php echo $comment->content; ?></span>
                                 <span class="signature">
-                                    - by
+                                    <small>- by</small>
                                     <a href="<?php echo url::site('users/detail/'.$comment->user->username); ?>">
                                         <?php echo $comment->user->display_name; ?>
                                     </a>
@@ -118,13 +119,13 @@
                         <div id="answer-<?php echo $answer->id; ?>" class="post-detail answer clearfix">
 
                             <div class="panel">
-                                <div class="up-vote">
+                                <div class="up-vote ir">
                                     <?php echo html::anchor('answers/vote_up/'.$answer->id, 'Up'); ?>
                                 </div>
                                 <div class="score">
                                     <?php echo $answer->up_vote_count - $answer->down_vote_count; ?>
                                 </div>
-                                <div class="down-vote">
+                                <div class="down-vote ir">
                                     <?php echo html::anchor('answers/vote_down/'.$answer->id, 'Down'); ?>
                                 </div>
                                 <?php if($show_accept_button == true): ?>
@@ -164,15 +165,17 @@
                                 </div>
 
                                 <?php $answer->load_comments(); ?>
-                                <?php if($answer->have_comments()): ?>
+                                <?php if($answer->has_comments()): ?>
                                 <div class="comments">
                                     <?php foreach($answer->comments as $index => $comment): ?>
                                     <div class="comment clearfix">
+                                        <?php /***travo20100426: Not Implemented yet
                                         <div class="comment-panel">
                                             <span class="score">[<?php echo $comment->up_vote_count - $comment->down_vote_count; ?>]</span>
                                             <span class="up-vote"><?php echo html::anchor('comments/vote_down/'.$comment->id, '[V]'); ?></span>
                                             <span class="flag"><?php echo html::anchor('comments/flag/'.$comment->id, '[F]'); ?></span>
                                         </div>
+                                        */ ?>
                                         <div class="content">
                                             <span class="blurb"><?php echo $comment->content; ?></span>
                                             <span class="signature">

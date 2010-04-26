@@ -43,7 +43,7 @@ class Post_Model extends ORM
      *
      * @return bool
      */
-     public function have_answers()
+     public function has_answers()
      {
          return (count($this->answers) > 0) ? true : false;
      }
@@ -66,10 +66,102 @@ class Post_Model extends ORM
      *
      * @return bool
      */
-     public function have_comments()
+     public function has_comments()
      {
          return (count($this->comments) > 0) ? true : false;
      }
+
+    /**
+     * Determine Whether There are Blurb to this Post
+     *
+     * @return bool
+     */
+     public function has_content()
+     {
+         return (count($this->content) > 0) ? true : false;
+     }
+
+    /**
+     * Print out the truncated content (aka/ excerpt)
+     *
+     * @return string
+     */
+     public function excerpt()
+     {
+         echo $this->get_excerpt();
+     }
+
+    /**
+     * Provide the truncated content of this post
+     *
+     * @return string
+     */
+     public function get_excerpt()
+     {
+         return text::truncate($this->content, 250, ' ...', false);
+     }
+
+    /**
+     * Provide the summarised vote count value
+     *
+     * @return int
+     */
+     public function get_vote_count()
+     {
+         return $this->up_vote_count - $this->down_vote_count;
+     }
+
+    /**
+     * Provide the vote label with plural consideration
+     *
+     * @return string
+     */
+     public function get_vote_label()
+     {
+         return inflector::plural('vote', $this->get_vote_count());
+     }
+
+    /**
+     * Provide the answer count value
+     *
+     * @return int
+     */
+     public function get_answer_count()
+     {
+         return $this->answer_count;
+     }
+
+    /**
+     * Provide the answer label with plural consideration
+     *
+     * @return string
+     */
+     public function get_answer_label()
+     {
+         return inflector::plural('answer', $this->get_answer_count());
+     }
+
+    /**
+     * Provide the view count value
+     *
+     * @return int
+     */
+     public function get_view_count()
+     {
+         return $this->view_count;
+     }
+
+    /**
+     * Provide the view label with plural consideration
+     *
+     * @return string
+     */
+     public function get_view_label()
+     {
+         return inflector::plural('view', $this->get_view_count());
+     }
+
+
 
     //----------------------- STATIC METHODS --------------------------//
 
@@ -394,8 +486,6 @@ class Post_Model extends ORM
         //-- Sanitize
         if($title == '')
             throw new Exception('Title field is required');
-        if($body == '')
-            throw new Exception('Body field is required');
         if($tags_string == '')
             throw new Exception('Tags are not provided');
 

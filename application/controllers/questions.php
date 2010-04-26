@@ -35,7 +35,7 @@ class Questions_Controller extends Website_Controller
      * @uses browse_active()
      * @uses browse_unanswered()
      */
-    public function browse($filler='page', $page_number=1, $order_by='active', $page_size=25)
+    public function browse($filler='page', $page_number=1, $order_by='active', $page_size=10)
     {
         //-- Determine Subcontroller
         switch($order_by)
@@ -95,7 +95,7 @@ class Questions_Controller extends Website_Controller
         $this->set_pagination("questions/detail/$question_id/$question->slug", $total_items, $page_size);
 
         //-- Render View
-        $this->template->content = View::factory('themes/default/question_detail')
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/question_detail')
             ->bind('question', $question)
             ->bind('answers', $answers)
             ->bind('show_accept_button', $show_accept_button)
@@ -133,7 +133,7 @@ class Questions_Controller extends Website_Controller
         else
         {
             //-- Direct Connection to Action Without a Post Back
-            $this->template->content = View::factory('themes/default/question_ask');
+            $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/question_ask');
         }
     }
     
@@ -229,13 +229,17 @@ class Questions_Controller extends Website_Controller
         //-- Initialise Model
         $total_items    = ORM::factory('post')->count_all_questions();
         $questions      = ORM::factory('post')->get_active_questions($page_number, $page_size);
-
+        
         //-- Set Pagination
         $this->set_pagination('questions/browse', $total_items, $page_size);
 
+        //-- View Data
+        $subheader = 'Recent Questions';
+        
         //-- Render View
-        $this->template->content = View::factory('themes/default/question_list')
-            ->bind('questions', $questions);
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/question_list')
+            ->bind('questions', $questions)
+            ->bind('subheader', $subheader);
     }
 
     /**
@@ -257,9 +261,13 @@ class Questions_Controller extends Website_Controller
         //-- Set Pagination
         $this->set_pagination('questions/unanswered', $total_items, $page_size);
 
+        //-- View Data
+        $subheader = 'Unanswered Questions';
+
         //-- Render View
-        $this->template->content = View::factory('themes/default/question_list')
-            ->bind('questions', $questions);
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/question_list')
+            ->bind('questions', $questions)
+            ->bind('subheader', $subheader);
     }
 
     /**
