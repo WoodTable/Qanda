@@ -47,7 +47,6 @@ class Activity_Model extends ORM
             $activity->action_key   = $action_key;
             $activity->object_type  = $object_type;
             $activity->object_id    = $object_id;
-            $activity->blurb        = "user $user_id $action_key $object_type $object_id";
             $activity->date_created = date::timestamp();
             $activity->created_by   = 'activity::log';
             $activity->save();

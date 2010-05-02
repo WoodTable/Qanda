@@ -19,17 +19,36 @@
 
                 <div id="question-<?php echo $question->id; ?>" class="post-detail question clearfix">
                     <div class="panel">
-                        <div class="up-vote ir">
+
+                        <?php
+                            $up_vote_class = 'up-vote';
+                            if($current_user->has_up_voted($question->id))
+                                $up_vote_class = 'up-voted';
+                        ?>
+                        <div class="<?php echo $up_vote_class; ?> ir">
                             <?php echo html::anchor('questions/vote_up/'.$question->id, 'Up'); ?>
                         </div>
+
                         <div class="score">
                             <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                         </div>
-                        <div class="down-vote ir">
+
+                        <?php
+                            $down_vote_class = 'down-vote';
+                            if($current_user->has_down_voted($question->id))
+                                $down_vote_class = 'down-voted';
+                        ?>
+                        <div class="<?php echo $down_vote_class; ?> ir">
                             <?php echo html::anchor('questions/vote_down/'.$question->id, 'Down'); ?>
                         </div>
-                        <div class="bookmark">
-                            <?php echo html::anchor('questions/bookmark/'.$question->id, $question->bookmark_count); ?>
+                        
+                        <?php
+                            $follow_class = 'follow';
+                            if($current_user->has_followed($question->id))
+                                $follow_class = 'followed';
+                        ?>
+                        <div class="<?php echo $follow_class; ?>">
+                            <?php echo html::anchor('questions/follow/'.$question->id, $question->follow_count); ?>
                         </div>
                         <div class="view">
                             <small>
@@ -104,6 +123,10 @@
 
                 </div><?php /* END .post-detail */ ?>
 
+                
+
+                <?php /********************* ANSWER LISTING ******************/ ?>
+
                 <?php /***travo20100328: Not ready yet
                 <?php $question->load_answers(); ?>
                 <?php $answers = $question->answers; ?>
@@ -119,20 +142,47 @@
                         <div id="answer-<?php echo $answer->id; ?>" class="post-detail answer clearfix">
 
                             <div class="panel">
-                                <div class="up-vote ir">
+
+                                <?php
+                                    $up_vote_class = 'up-vote';
+                                    if($current_user->has_up_voted($answer->id))
+                                        $up_vote_class = 'up-voted';
+                                ?>
+                                <div class="<?php echo $up_vote_class; ?> ir">
                                     <?php echo html::anchor('answers/vote_up/'.$answer->id, 'Up'); ?>
                                 </div>
+
                                 <div class="score">
                                     <?php echo $answer->up_vote_count - $answer->down_vote_count; ?>
                                 </div>
-                                <div class="down-vote ir">
+
+                                <?php
+                                    $down_vote_class = 'down-vote';
+                                    if($current_user->has_down_voted($answer->id))
+                                        $down_vote_class = 'down-voted';
+                                ?>
+                                <div class="<?php echo $down_vote_class; ?> ir">
                                     <?php echo html::anchor('answers/vote_down/'.$answer->id, 'Down'); ?>
                                 </div>
-                                <?php if($show_accept_button == true): ?>
-                                    <div class="accept-answer">
+
+                                <?php /* Accept Answer Tick */ ?>
+                                <?php if($show_accept_button == true && $answer->status == 'accepted'): ?>
+                                    <div class="answer-accepted ir">
+                                        <?php echo html::anchor('answers/accept/'.$answer->id, 'Answer Accepted'); ?>
+                                    </div>
+                                <?php elseif($answer->status == 'accepted'): ?>
+                                    <div class="answer-accepted ir">
+                                        <span>
+                                            'Answer Accepted'
+                                        </span>
+                                    </div>
+                                <?php elseif($show_accept_button == true): ?>
+                                    <div class="accept-answer ir">
                                         <?php echo html::anchor('answers/accept/'.$answer->id, 'Accept Answer'); ?>
                                     </div>
                                 <?php endif; ?>
+
+                                
                             </div><?php /* END .panel */ ?>
 
 
@@ -219,7 +269,7 @@
                     $form->target_post_id          = $question->id;
                     $form->enable_post_title    = FALSE;
                     $form->enable_post_tags     = FALSE;
-                    $form->submit_label         = 'Post Comment';
+                    $form->submit_label         = 'Post Answer';
                     $form->render(TRUE);
                 ?>
 

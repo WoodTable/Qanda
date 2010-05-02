@@ -32,6 +32,63 @@ class User_Model extends Auth_User_Model
         return $output;
     }
 
+    /**
+     * Check Whether this User has Followed Specified Question
+     *
+     * @param int $question_id
+     * @return bool
+     */
+    public function has_followed($question_id)
+    {
+        //-- Validate Current User
+        if($this->id == 0)
+            return false;
+
+        //-- Check Log
+        if(ORM::factory('activity')->has_log($this->id, 'follow', 'post', $question_id))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Check Whether this User has Up Voted Specified Question/Answer
+     *
+     * @param int $post_id
+     * @return bool
+     */
+    public function has_up_voted($post_id)
+    {
+        //-- Validate Current User
+        if($this->id == 0)
+            return false;
+
+        //-- Check Log
+        if(ORM::factory('activity')->has_log($this->id, 'vote_up', 'post', $post_id))
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Check Whether this User has Down Voted Specified Question/Answer
+     *
+     * @param int $post_id
+     * @return bool
+     */
+    public function has_down_voted($post_id)
+    {
+        //-- Validate Current User
+        if($this->id == 0)
+            return false;
+
+        //-- Check Log
+        if(ORM::factory('activity')->has_log($this->id, 'vote_down', 'post', $post_id))
+            return true;
+        else
+            return false;
+    }
+
     //----------------------- STATIC METHODS --------------------------//
 
     /**

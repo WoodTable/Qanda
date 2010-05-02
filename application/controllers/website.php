@@ -19,6 +19,7 @@ class Website_Controller extends Template_Controller
     //-- Global Variables
     public $template; // In application/views folder
     protected $settings;
+    public $user;
     
     /**
      * Website Controller Constructor
@@ -48,6 +49,14 @@ class Website_Controller extends Template_Controller
         $this->template->set_global('theme_url', 'themes/'.$this->settings->get('current_theme').'/');
         $this->template->set_global('current_version', $this->settings->get('version'));
 
+        //-- Set User
+        $this->user = ORM::factory('user');
+        $authentic = Auth::factory();
+        if ($authentic->logged_in())
+        {
+            $this->user = $authentic->get_user();
+        }
+        $this->template->set_global('current_user', $this->user);
 	}
 
     //----------------------- PUBLIC METHODS --------------------------//

@@ -188,21 +188,21 @@ class Questions_Controller extends Website_Controller
     }
 
     /**
-     * Bookmark a Question
+     * Follow a Question
      *
      * @param int $question_id
-     * @uses Post_Model::bookmark()
+     * @uses Post_Model::follow()
      */
-    public function bookmark($question_id)
+    public function follow($question_id)
     {
-        //-- Perform Question Bookmark
+        //-- Perform Question Follow
         try
         {
-            ORM::factory('post')->bookmark($question_id);
+            ORM::factory('post')->follow($question_id);
         }
         catch(Exception $ex)
         {
-            throw new Kohana_User_Exception('Fail to Vote Down', 'Cannot bookmark question ID: '.$question_id.'. Caught exception: '.$ex->getMessage());
+            throw new Kohana_User_Exception('Fail to Vote Down', 'Cannot follow question ID: '.$question_id.'. Caught exception: '.$ex->getMessage());
         }
 
         //-- Fetch Original Question
@@ -210,6 +210,42 @@ class Questions_Controller extends Website_Controller
 
         //-- Redirect
         url::redirect('/questions/detail/'.$question->id.'/'.$question->slug);
+    }
+
+    /**
+     * View Questions Contain Matching Tag
+     *
+     * @param string $tag_slug
+     * @param int $page_number
+     * @param int $page_size
+     * @uses set_pagination()
+     * @uses Post_Model::count_questions_by_tag()
+     * @uses Post_Model::get_questions_by_tag()
+     *
+     */
+    public function tagged($tag_slug, $filler='page', $page_number=1, $page_size=10)
+    {
+        //TODO: Error catching
+
+        //-- Initialise Model
+        $tag            = ORM::factory('tag')->by_slug($tag_slug);
+
+        //TODO: Skip query if $tag->id == 0
+        $total_items    = ORM::factory('post')->count_questions_by_tag($tag->id);
+
+        //TODO: skip query if $total_items == 0
+        $questions      = ORM::factory('post')->get_questions_by_tag($tag->id, $page_number, $page_size);
+
+        //-- Set Pagination
+        $this->set_pagination('questions/tagged/'.$tag_slug, $total_items, $page_size);
+
+        //-- View Data
+        $subheader = "Questions Tagged with '$tag->name'";
+
+        //-- Render View
+        $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/question_list')
+            ->bind('questions', $questions)
+            ->bind('subheader', $subheader);
     }
 
     //----------------------- PRIVATE METHODS --------------------------//
@@ -304,14 +340,6 @@ class Questions_Controller extends Website_Controller
     }
 
     //----------------------- PLACE HOLDERS --------------------------//
-
-    /**
-     * View Questions Contain Matching Tag
-     */
-    public function tagged($tag_slug)
-    {
-        $this->template->content = "Method Not Implemented Yet.";
-    }
 
     /**
      * Search Questions with Specified Criteria

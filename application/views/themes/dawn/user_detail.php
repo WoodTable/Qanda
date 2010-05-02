@@ -71,7 +71,7 @@
                         <?php foreach($asked_questions as $index => $question): ?>
                             <div class="question">
                                 <span>
-                                    <?php echo $question->bookmark_count; ?>
+                                    <?php echo $question->follow_count; ?>
                                     | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                                     | <?php echo $question->answer_count; ?>
                                     | <?php echo $question->view_count; ?>
@@ -89,7 +89,7 @@
                         <?php foreach($answered_questions as $index => $question): ?>
                             <div class="question">
                                 <span>
-                                    <?php echo $question->bookmark_count; ?>
+                                    <?php echo $question->follow_count; ?>
                                     | <?php echo $question->up_vote_count - $question->down_vote_count; ?>
                                     | <?php echo $question->answer_count; ?>
                                     | <?php echo $question->view_count; ?>

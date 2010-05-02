@@ -4,7 +4,7 @@
 Project:	    Qanda
 Author:         Travis <travis@travaganza.com.au>
 Since:	        1.0.0
-Last Modified:	2010-04-22
+Last Modified:	2010-05-01
 
 Orange  #F47608
     75% #F79846
@@ -20,6 +20,7 @@ Maroon  #651703
 3. Wrapper
 4. Header
     4.1 Logo
+    4.2 Website Title
 5. Navigation
     5.1 Menu
     5.2 Search Engine
@@ -107,7 +108,9 @@ form textarea:focus {
     -moz-box-shadow:0 0 5px #F47608;
 }
 
-
+strong {
+    font-weight: bold;
+}
 
 /* -------------------------------------------------------------- */
 /* 3. Wrapper
@@ -127,25 +130,29 @@ form textarea:focus {
     height: 150px;
     width: 940px;
     margin: 20px auto;
-    background: transparent url(../images/qanda-logo.png) no-repeat 0 0;
-}
-
-#header-inner {
-    padding: 40px 10px 10px 200px;
 }
 
     /* -------------------------------------------------------------- */
     /* 4.1 Logo                                                       */
 
     #header .logo {
-
+        float: left;
+    }
+    
+    /* -------------------------------------------------------------- */
+    /* 4.2 Website Title                                              */
+    
+    #header .title {
+        float: left;
+        margin: 45px 0 0 40px;
     }
 
-    #header .logo h1 a {
+    #header .title h1 a {
         color: #FEFEFE;
     }
 
-    #header .logo p {
+    #header .title p {
+        margin: 5px 0 0 0;
         font-size: 16px;
         color: #FEFEFE;
     }
@@ -379,6 +386,14 @@ form textarea:focus {
             margin: 0 auto;
         }
 
+        .post-detail .panel .up-voted a {
+            width: 40px;
+            height: 30px;
+            background: transparent url(../images/up-arrow-active.png) no-repeat 0 0;
+            display: block;
+            margin: 0 auto;
+        }
+
         .post-detail .panel .score {
             font-size: 28px;
             font-weight: bold;
@@ -393,13 +408,54 @@ form textarea:focus {
             margin: 0 auto;
         }
 
-        .post-detail .panel .bookmark a {
+        .post-detail .panel .down-voted a {
+            width: 40px;
+            height: 30px;
+            background: transparent url(../images/down-arrow-active.png) no-repeat 0 0;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .post-detail .panel .follow a {
             width: 25px; /* 40 - 15 */
             height: 25px; /* 40 - 15 */
             background: transparent url(../images/star-inactive.png) no-repeat 0 0;
             display: block;
             margin: 10px auto 0 auto;
             padding: 15px 0 0 15px;
+        }
+
+        .post-detail .panel .followed a {
+            width: 25px; /* 40 - 15 */
+            height: 25px; /* 40 - 15 */
+            background: transparent url(../images/star-active.png) no-repeat 0 0;
+            display: block;
+            margin: 10px auto 0 auto;
+            padding: 15px 0 0 15px;
+        }
+        
+        .post-detail .panel .accept-answer a {
+            width: 40px;
+            height: 31px;
+            background: transparent url(../images/tick-inactive.png) no-repeat 0 0;
+            display: block;
+            margin: 10px auto 0 auto;
+        }
+
+        .post-detail .panel .answer-accepted a {
+            width: 40px;
+            height: 31px;
+            background: transparent url(../images/tick-active.png) no-repeat 0 0;
+            display: block;
+            margin: 10px auto 0 auto;
+        }
+
+        .post-detail .panel .answer-accepted span {
+            width: 40px;
+            height: 31px;
+            background: transparent url(../images/tick-active.png) no-repeat 0 0;
+            display: block;
+            margin: 10px auto 0 auto;
         }
 
         .post-detail .panel .view {
@@ -771,7 +827,7 @@ form textarea:focus {
     form.post_form textarea#post_body {
         border: 1px solid #BAC2C6;
         width: 600px;
-        height: 200px;
+        height: 130px;
         margin: 0 0 20px 0;
         padding: 5px;
     }
@@ -875,7 +931,18 @@ form textarea:focus {
         margin: 0 0 10px 0;
     }
 
+    .widget p {
+        margin: 3px 0 5px 0;
+    }
 
+    .widget a {
+        border-bottom: 1px dashed #7F341F;
+    }
+
+    .widget a:hover,
+    .widget a:active {
+        border-bottom: none;
+    }
 
     /* -------------------------------------------------------------- */
     /* 14.1 Login Form                                                */
@@ -893,14 +960,8 @@ form textarea:focus {
         margin: 3px 0;
     }
 
-    /* -------------------------------------------------------------- */
-    /* 14.3 Welcome Box                                               */
 
-    #welcome-widget p {
-        margin: 10px 0;
-    }
-
-
+    
 /* -------------------------------------------------------------- */
 /* 15. CSS Tools
 /* -------------------------------------------------------------- */

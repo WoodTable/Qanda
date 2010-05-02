@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `qa_users` (
     `up_vote_casted`        int(11) unsigned    NOT NULL DEFAULT '0',
     `down_vote_casted`      int(11) unsigned    NOT NULL DEFAULT '0',
     `badge_count`           int(11) unsigned    NOT NULL DEFAULT '0',
-    `post_bookmarked`        int(11) unsigned    NOT NULL DEFAULT '0',
+    `post_followed`         int(11) unsigned    NOT NULL DEFAULT '0',
     `profile_view_count`    int(11) unsigned    NOT NULL DEFAULT '0' COMMENT 'number of times viewed by others',
     
     -- Package Foot
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `qa_posts` (
     `view_count`            int(11)             NOT NULL DEFAULT '0',
     `answer_count`          int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',
     `comment_count`         int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions and answers',
-    `bookmark_count`        int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',    
+    `follow_count`          int(11)             NOT NULL DEFAULT '0'        COMMENT 'only applicable to questions',    
     `last_activity_date`    datetime            NOT NULL DEFAULT '0000-00-00 00:00:00'  COMMENT 'Only applicable to questions',
     
     -- Package Foot
@@ -194,11 +194,10 @@ CREATE TABLE IF NOT EXISTS `qa_post_metas` (
 CREATE TABLE IF NOT EXISTS `qa_activities` (
     `id`                    bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `user_id`               bigint(20) unsigned NOT NULL DEFAULT '0',
-    `action_key`            varchar(20)         NOT NULL DEFAULT '' COMMENT 'create|modify|view|vote_up|vote_down|flag',
+    `action_key`            varchar(20)         NOT NULL DEFAULT '' COMMENT 'create|modify|view|vote_up|vote_down|flag|follow|answer-accepted',
     `object_type`           varchar(20)         NOT NULL DEFAULT '' COMMENT 'post|user',
     `object_id`             bigint(20) unsigned NOT NULL DEFAULT '0',
-    `blurb`                 text                NOT NULL            COMMENT 'a human readable setence explains this activity',
-    
+
     -- Package Foot
     `date_created`          datetime            NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`            varchar(200)        NOT NULL DEFAULT '',

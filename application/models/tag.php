@@ -39,7 +39,28 @@ class Tag_Model extends ORM
             ->orderby('post_count', 'desc')
             ->find_all();
 
+        //-- Output
         return $tags;
+    }
+
+    /**
+     * Find a Tag by its slug
+     *
+     * @param string $slug
+     * @return Tag
+     * @static
+     */
+    public function by_slug($slug)
+    {
+        //-- Query
+        $tag = $this
+            ->where('is_deleted', 0)
+            ->where('slug', $slug)
+            ->orderby('id', 'desc')
+            ->find();
+
+        //-- Output
+        return $tag;
     }
 
     /**

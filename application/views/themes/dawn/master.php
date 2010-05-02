@@ -19,9 +19,13 @@
 <body>
     <div id="wrapper">
 
-        <div id="header">
-        <div id="header-inner" class="clearfix">
+        <div id="header" class="clearfix">
             <div class="logo">
+                <a href="<?php echo url::site(); ?>">
+                    <?php echo html::image('media/themes/'.$this->settings->get('current_theme').'/images/qanda-logo.png'); ?>
+                </a>
+            </div>
+            <div class="title">
                 <h1>
                     <?php echo html::anchor('/', $this->settings->get('site_name')); ?>
                 </h1>
@@ -29,7 +33,6 @@
                     <?php echo $this->settings->get('site_description'); ?>
                 </p>
             </div>
-        </div>
         </div><?php /* END #header */ ?>
 
         

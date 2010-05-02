@@ -161,8 +161,6 @@ class Post_Model extends ORM
          return inflector::plural('view', $this->get_view_count());
      }
 
-
-
     //----------------------- STATIC METHODS --------------------------//
 
     /**
@@ -251,6 +249,94 @@ class Post_Model extends ORM
             ->where('answer_count', 0)
             ->count_all();
         
+        //-- Output
+        return $count;
+    }
+
+    /**
+     * List Questions with Specified Tag
+     *
+     * @param int $tag_id
+     * @param int $page_number
+     * @param int $page_size
+     * @return ORM_Iterator
+     * @static
+     */
+    public function get_questions_by_tag($tag_id, $page_number, $page_size)
+    {
+        //-- Local Variables
+        $limit = $page_size;
+        $offset = ($page_number-1) * $page_size;
+
+        //-- Find posts that contain this tag
+        $posts_tags = ORM::factory('posts_tag')
+            ->where('tag_id', $tag_id)
+            ->orderby('post_id', 'asc')
+            ->find_all();
+
+        $post_ids = array();
+        foreach($posts_tags as $posts_tag)
+        {
+            $post_ids[] = $posts_tag->post_id;
+        }
+
+        if(count($post_ids) == 0)
+            return array();
+
+        //-- Find questions with within those post IDs and sort by last activity DESC
+        $questions = $this
+            ->where('is_deleted', 0)
+            ->where('type', 'question')
+            ->in('id', $post_ids)
+            ->orderby('last_activity_date', 'desc')
+            ->orderby('date_created', 'desc')
+            ->find_all($limit, $offset);
+
+        //-- Output
+        return $questions;
+    }
+
+    /**
+     * Count Questions with Specified Tag
+     *
+     * @param int $tag_id
+     * @return int
+     * @static
+     */
+    public function count_questions_by_tag($tag_id)
+    {
+        //-- Initialise Model
+        $tag = ORM::factory('tag', $tag_id);
+        
+        //-- Find posts that contain this tag
+        $posts_tags = ORM::factory('posts_tag')
+            ->where('tag_id', $tag->id)
+            ->orderby('post_id', 'asc')
+            ->find_all();
+
+        $post_ids = array();
+        foreach($posts_tags as $posts_tag)
+        {
+            $post_ids[] = $posts_tag->post_id;
+        }
+
+        if(count($post_ids) == 0)
+            return 0;
+
+        //-- Find questions with within those post IDs and sort by last activity DESC
+        $count = $this
+            ->where('is_deleted', 0)
+            ->where('type', 'question')
+            ->in('id', $post_ids)
+            ->count_all();
+
+        //-- HOOK: Update Tag->post_count
+        if($tag->post_count != $count)
+        {
+            $tag->post_count = $count;
+            $tag->save();
+        }
+
         //-- Output
         return $count;
     }
@@ -835,12 +921,12 @@ class Post_Model extends ORM
     }
 
     /**
-     * Bookmark a Question
+     * Follow a Question
      *
      * @param int $question_id
      * @static
      */
-    public function bookmark($question_id)
+    public function follow($question_id)
     {
         //-- Authentic User
         $authentic = Auth::factory();
@@ -858,18 +944,18 @@ class Post_Model extends ORM
             throw new Exception('Question ID '.$question_id.' not found.');
 
         //-- Check Activity Already Exist
-        if(ORM::factory('activity')->has_log($user->id, 'bookmark', 'post', $question_id))
-            throw new Exception('User '.$user->id.' has already bookmark this question.');
+        if(ORM::factory('activity')->has_log($user->id, 'follow', 'post', $question_id))
+            throw new Exception('User '.$user->id.' has already follow this question.');
 
         //-- Log activity
-        ORM::factory('activity')->log($user->id, 'bookmark', 'post', $question_id);
+        ORM::factory('activity')->log($user->id, 'follow', 'post', $question_id);
 
-        //-- Increase Question's Bookmark Count
-        $question->bookmark_count += 1;
+        //-- Increase Question's Follow Count
+        $question->follow_count    += 1;
         $question->save();
         
-        //-- Increase User's Bookmark Count
-        $user->post_bookmarked     += 1;
+        //-- Increase User's Follow Count
+        $user->post_followed       += 1;
         //-- Update User's Last Activity
         $user->last_activity_date   = date::timestamp();
         $user->last_ip_address      = client::ip_address();
