@@ -1,8 +1,7 @@
 h1. Qanda
 
-Version: 0.2
 Author: Travis Lin <travis[at]travaganza[dot]com[dot]au>
-Website: http://www.qandasystem.com/
+Website: "http://www.qandasystem.com/":http://www.qandasystem.com/
 
 
 h2. Description
@@ -51,7 +50,7 @@ h2. Install
 
 h2. Changelog
 
-We are currently under experimental phase and changes are volatile, there is no point recording a changelog just yet. This section will become populated once 1.0-beta is in place.
+Detail in "changelog on GitHub Wiki":http://wiki.github.com/qanda/Qanda/qanda-changelog .
 
 
 
@@ -63,7 +62,7 @@ Please use "GitHub Issues Manager":http://github.com/qanda/Qanda/issues to repor
 
 h2. Demo Site
 
-Demo is now available on http://demo.qandasystem.com/ . Feel free to test out the system and have your say on GitHub wiki or issues manager.
+Demo is now available on "http://demo.qandasystem.com/":http://demo.qandasystem.com/ . Feel free to test out the system and have your say on "GitHub wiki":http://wiki.github.com/qanda/Qanda/ or "issues manager":http://github.com/qanda/Qanda/issues .
 
 
 ****************************************************************************
