@@ -13,10 +13,21 @@
 
 <head profile="http://gmpg.org/xfn/11">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <?php echo html::script('media/js/jquery-1.4.2.min.js'); ?>
+    <?php echo html::script('media/js/jquery.tooltip-1.3.min.js'); ?>
     <?php echo $head; ?>
 </head>
 
 <body>
+
+    <script type="text/javascript">
+        <?php if($this->user->id != 0): ?>
+            var user_role = 'registered';
+        <?php else: ?>
+            var user_role = 'guest';
+        <?php endif; ?>
+    </script>
+
     <div id="wrapper">
 
         <div id="header" class="clearfix">

@@ -25,6 +25,8 @@ class Answers_Controller extends Website_Controller
         parent::__construct(); //-- This must be included
     }
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
     /**
      * Create a New Answer
      *

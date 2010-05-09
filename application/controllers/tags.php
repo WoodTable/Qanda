@@ -25,6 +25,8 @@ class Tags_Controller extends Website_Controller
         parent::__construct(); //-- This must be included
     }
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
     /**
      * Show a List of Tags
      * 
@@ -43,7 +45,9 @@ class Tags_Controller extends Website_Controller
         $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/tag_list')
             ->bind('tags', $tags);
     }
-    
+
+    //----------------------- PRIVATE METHODS --------------------------//
+
     //----------------------- PLACE HOLDERS --------------------------//
 
     /**

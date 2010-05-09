@@ -38,26 +38,28 @@
                         </div>
 
                         <?php /***travo20100313
-                        <div class="email clearfix">
-                            <div class="label">Email:</div>
-                            <div class="value"><?php echo $user->email; ?></div>
-                        </div>
                         <div class="birthday clearfix">
                             <div class="label">Birthday:</div>
                             <div class="value"><?php echo $user->birthday; ?></div>
                         </div>
                         */ ?>
-                        
-                        <div class="location clearfix">
-                            <div class="label">Location:</div>
-                            <div class="value"><?php echo $user->location; ?></div>
-                        </div>
+
                         <div class="website clearfix">
                             <div class="label">Website:</div>
                             <div class="value"><?php echo $user->website; ?></div>
                         </div>
+                        <div class="location clearfix">
+                            <div class="label">Location:</div>
+                            <div class="value"><?php echo $user->location; ?></div>
+                        </div>
+
+                        <?php if($this->user->id == $user->id): ?>
+                            <div class="control_panel">
+                                <?php echo html::anchor('users/edit/', 'Update Your Profile'); ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    
+
                     <div class="description">
                         <?php echo $user->description; ?>
                     </div>

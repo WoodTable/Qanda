@@ -1032,7 +1032,7 @@ class Post_Model extends ORM
         ORM::factory('user')->adjust_reputation($answer->user_id, $reputation);
 
         //-- Log Question Acceptance Activity (for Question Author)
-        ORM::factory('activity')->log($question->user_id, 'answer-accepted', 'question', $question->id);
+        ORM::factory('activity')->log($question->user_id, 'answer-accepted', 'post', $question->id);
     }
 
     /**

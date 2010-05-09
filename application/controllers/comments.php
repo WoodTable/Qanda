@@ -25,6 +25,8 @@ class Comments_Controller extends Website_Controller
         parent::__construct(); //-- This must be included
     }
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
     /**
      * Post a comment
      *

@@ -45,10 +45,6 @@ class Website_Controller extends Template_Controller
         $this->head->title->set($this->settings->get('site_name'));
         $this->template->head = $this->head;
 
-        //-- Template Global Variables
-        $this->template->set_global('theme_url', 'themes/'.$this->settings->get('current_theme').'/');
-        $this->template->set_global('current_version', $this->settings->get('version'));
-
         //-- Set User
         $this->user = ORM::factory('user');
         $authentic = Auth::factory();
@@ -56,6 +52,10 @@ class Website_Controller extends Template_Controller
         {
             $this->user = $authentic->get_user();
         }
+
+        //-- Template Global Variables
+        $this->template->set_global('theme_url', 'themes/'.$this->settings->get('current_theme').'/');
+        $this->template->set_global('current_version', $this->settings->get('version'));
         $this->template->set_global('current_user', $this->user);
 	}
 
@@ -75,11 +75,9 @@ class Website_Controller extends Template_Controller
     protected function log_activity($activity, $object_type, $object_id)
     {
         //-- Log User View Activity
-        $authentic = Auth::factory();
-        if ($authentic->logged_in())
+        if($this->user->is_logged_in())
         {
-            $user = $authentic->get_user();
-            ORM::factory('activity')->log($user->id, $activity, $object_type, $object_id);
+            ORM::factory('activity')->log($this->user->id, $activity, $object_type, $object_id);
         }
     }
 

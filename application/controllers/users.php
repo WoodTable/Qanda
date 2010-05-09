@@ -25,6 +25,8 @@ class Users_Controller extends Website_Controller
         parent::__construct(); //-- This must be included
     }
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
     /**
      * Show a List of Users
      *
@@ -82,7 +84,7 @@ class Users_Controller extends Website_Controller
      */
     public function login()
     {
-        if(Auth::instance()->logged_in())
+        if($this->user->is_logged_in() == TRUE)
         {//-- Already logged in as someone
             //TODO: Display 'Already Logged In' Error Page
             throw new Kohana_User_Exception('Already Logged In.', 'You have already logged in to the website');
@@ -140,8 +142,8 @@ class Users_Controller extends Website_Controller
      */
     public function register()
     {
-        //-- Verify Currnet Authentication
-        if(Auth::instance()->logged_in())
+        //-- Verify Current Authentication
+        if($this->user->is_logged_in() == TRUE)
         {//-- Display 'Already Logged In' message
             //TODO: Display proper 'Already Logged In' page and provide link to log out
             throw new Kohana_User_Exception('Already Logged In.', 'You have already logged in to the website');
@@ -177,6 +179,56 @@ class Users_Controller extends Website_Controller
         }
     }
 
+    /**
+     * Edit an Existing Self Profile
+     *
+     * @param int $user_id
+     */
+    public function edit($user_id = 0)
+    {
+        //-- Verify Current Authentication
+        if($this->user->is_logged_in() == FALSE)
+        {
+            throw new Kohana_User_Exception('User Not Logged In.', 'You are required to login to edit your profile.');
+        }
+        else
+        {
+            if($_POST)
+            {//-- Detect a Post Back
+                //TODO: Validate user input
+                $post = Validation::factory($_POST);
+                
+                //-- Update User Profile
+                try
+                {
+                    $this->user->update($post);
+                }
+                catch(Exception $ex)
+                {
+                    throw new Kohana_User_Exception('Fail to Edit User Profile', 'Cannot update user profile. Caught exception: '.$ex->getMessage());
+                }
+
+                //-- Redirect
+                url::redirect('/users/detail/'.$this->user->username);
+            }
+            else
+            {//-- Show Update Form
+                if($user_id == 0)
+                {//-- Load Own Profile
+                    $user = $this->user;
+                }
+                else
+                {//-- For Admin who has ability to edit all users
+                    //$user = ORM::factory('user', $user_id);
+                }
+                
+                $this->template->content = View::factory('themes/'.$this->settings->get('current_theme').'/user_edit')
+                    ->bind('user', $user)
+                    ;
+            }
+        }
+    }
+
     //----------------------- PRIVATE METHODS --------------------------//
 
     /**
@@ -195,13 +247,5 @@ class Users_Controller extends Website_Controller
     }
 
     //----------------------- PLACE HOLDERS --------------------------//
-
-    /**
-     * Edit an Existing User
-     */
-    public function edit($user_id)
-    {
-        $this->template->content = "Method Not Implemented Yet.";
-    }
 
 }//END class

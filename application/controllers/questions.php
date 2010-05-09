@@ -25,6 +25,8 @@ class Questions_Controller extends Website_Controller
         parent::__construct(); //-- This must be included
     }
 
+    //----------------------- PUBLIC METHODS --------------------------//
+
     /**
      * Browse a List of Questions
      *
@@ -81,16 +83,11 @@ class Questions_Controller extends Website_Controller
 
         //-- Display 'Accept Answer Button'
         $show_accept_button = false;
-        $authentic = Auth::factory();
-        if ($authentic->logged_in())
+        if($this->user->id == $question->user_id)
         {
-            $user = $authentic->get_user();
-            if($user->id == $question->user_id)
-            {
-                $show_accept_button = true;
-            }
+            $show_accept_button = true;
         }
-        
+
         //-- Set Pagination
         $this->set_pagination("questions/detail/$question_id/$question->slug", $total_items, $page_size);
 
@@ -247,7 +244,7 @@ class Questions_Controller extends Website_Controller
             ->bind('questions', $questions)
             ->bind('subheader', $subheader);
     }
-
+    
     //----------------------- PRIVATE METHODS --------------------------//
 
     /**

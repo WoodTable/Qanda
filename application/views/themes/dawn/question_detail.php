@@ -9,13 +9,33 @@
 */
 ?>
         <div id="content">
+
+            <script type="text/javascript">
+            <!--
+                (function($)
+                {
+                    $(document).ready(function()
+                    {
+                        if(user_role == 'guest')
+                        {
+                            $('.up-vote a, .down-vote a, .follow a').bind('click', function(){ return false; });
+                            $('.up-vote a, .down-vote a, .follow a').tooltip({
+                                showURL: false
+                                , bodyHandler: function(){ return 'Please login first'; }
+                            });
+                        }
+                    });
+                }(jQuery));
+            //-->
+            </script>
+
+
             
             <div class="main-bar">
 
                 <div class="subheader">
                     <h2><?php echo html::anchor('/questions/detail/'.$question->id.'/'.$question->slug, $question->title); ?></h2>
                 </div>
-
 
                 <div id="question-<?php echo $question->id; ?>" class="post-detail question clearfix">
                     <div class="panel">

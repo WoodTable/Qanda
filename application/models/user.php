@@ -19,6 +19,16 @@ class User_Model extends Auth_User_Model
     //----------------------- PUBLIC METHODS --------------------------//
 
     /**
+     * Determine whether the current user is logged in (oppose to guest)
+     *
+     * @return bool
+     */
+    public function is_logged_in()
+    {
+        return ($this->id > 0) ? true : false;
+    }
+    
+    /**
      * Generate the Gravatar URL as instructed at http://en.gravatar.com/site/implement/url
      *
      * @param int $size
@@ -89,6 +99,41 @@ class User_Model extends Auth_User_Model
             return false;
     }
 
+    /**
+     * Update user profile
+     *
+     * @param Validation_Object $post
+     */
+    public function update($post)
+    {
+        //-- Fetch User Input
+        $display_name   = $post->display_name;
+        $website        = $post->website;
+        $location       = $post->location;
+        
+        //-- Sanitize
+        if($display_name == '')
+            throw new Exception('Display Name is required.');
+
+        //-- Update Profile
+        $this->display_name         = $display_name;
+        $this->website              = $website;
+        $this->location             = $location;
+
+        $this->last_activity_date   = date::timestamp();
+        $this->last_ip_address      = Input::instance()->ip_address();
+        $this->last_user_agent      = Kohana::user_agent();
+        $this->date_modified        = date::timestamp();
+        $this->modified_by          = 'user::update';
+        //$this->save();
+
+        //-- Update User Details
+        if(!$this->save())
+        {
+            throw new Exception('Failed to save user.');
+        }
+    }
+    
     //----------------------- STATIC METHODS --------------------------//
 
     /**
@@ -160,16 +205,17 @@ class User_Model extends Auth_User_Model
 
         //-- Create new user
         $user = ORM::factory('user');
-        $user->username                 = $username;
-        $user->email                    = $email;
-        $user->password                 = $password;
-        $user->activation_key           = strtolower(text::random('alnum', 32));
-        $user->last_activity_date       = date::timestamp();
-        $user->last_ip_address          = Input::instance()->ip_address();
-        $user->last_user_agent          = Kohana::user_agent();
-        $user->date_created             = date::timestamp();
-        $user->created_by               = 'user::create_user';
-
+        $user->username             = $username;
+        $user->display_name         = $username; // NOTE: Temperary until user able to assign display name upon registration
+        $user->email                = $email;
+        $user->password             = $password;
+        $user->activation_key       = strtolower(text::random('alnum', 32));
+        $user->last_activity_date   = date::timestamp();
+        $user->last_ip_address      = Input::instance()->ip_address();
+        $user->last_user_agent      = Kohana::user_agent();
+        $user->date_created         = date::timestamp();
+        $user->created_by           = 'user::create_user';
+        
         //-- Insert user and its role
         if($user->add(ORM::factory('role', $role_name)) AND $user->save())
         {

@@ -4,7 +4,7 @@
 Project:	    Qanda
 Author:         Travis <travis@travaganza.com.au>
 Since:	        1.0.0
-Last Modified:	2010-05-01
+Last Modified:	2010-05-09
 
 Orange  #F47608
     75% #F79846
@@ -39,6 +39,7 @@ Maroon  #651703
     10.2 Login Form
     10.3 User Details
         10.3.1 vCard
+    10.4 Edit User Profile
 11. Tags
 12. Badges
 13. Partials
@@ -52,6 +53,8 @@ Maroon  #651703
 15. CSS Tools
     15.1 Clear Fix
     15.2 Image Replacement
+16. Plugins
+    16.1 Tooltip
 
 ----------------------------------------------------------------- */
 
@@ -579,6 +582,10 @@ strong {
     white-space: nowrap;
 }
 
+.user-summary .user-details a {
+    font-size: 12px;
+}
+
 .user-summary .user-details .reputation {
     background: transparent url(../images/reputation-icon.png) no-repeat 0 0;
     padding: 0 0 0 12px;
@@ -716,6 +723,10 @@ strong {
             width: 355px;
         }
 
+        .vcard .summary h3 {
+            margin: 0 0 10px 0;
+        }
+
         .vcard .summary div .label {
             width: 130px;
             float: left;
@@ -728,6 +739,12 @@ strong {
             margin: 5px 0;
         }
 
+        .vcard .summary .control_panel {
+            float: left;
+            margin: 10px 0 0 0;
+            font-size: 12px;
+        }
+
         .vcard .description {
             float: left;
             width: 360px;
@@ -736,6 +753,54 @@ strong {
             background-color: #EEE;
             padding: 10px;
         }
+
+    /* -------------------------------------------------------------- */
+    /* 10.4 Edit User Profile                                         */
+
+    form.edit_user_form {
+        margin: 20px 0 0 0;
+    }
+
+    form.edit_user_form label.display_name {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.edit_user_form input#display_name {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 78px;
+        padding: 3px 5px;
+    }
+
+    form.edit_user_form label.website {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.edit_user_form input#website {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 122px;
+        padding: 3px 5px;
+    }
+
+    form.edit_user_form label.location {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    form.edit_user_form input#location {
+        border: 1px solid #BAC2C6;
+        width: 200px;
+        margin: 0 0 20px 116px;
+        padding: 3px 5px;
+    }
+
+    form.edit_user_form input#submit_user_edit {
+        border: 1px solid #BAC2C6;
+        padding: 5px;
+    }
 
 
 
@@ -990,4 +1055,24 @@ strong {
         overflow:hidden;
         text-decoration:none;
         text-indent:-90000em;
+    }
+
+
+
+/* -------------------------------------------------------------- */
+/* 16. Plugins
+/* -------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------- */
+    /* 16.1 Tooltip                                                 */
+
+    #tooltip {
+        padding: 10px;
+        position: absolute;
+        z-index: 3000;
+        background-color: #EFEFEF;
+        color: #7F341F;
+        opacity: 0.85;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
     }
